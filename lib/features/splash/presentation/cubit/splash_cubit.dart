@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_dimens.dart';
@@ -17,9 +18,10 @@ part 'splash_state.dart';
 /// if the checks resolve instantly, so the brand animation never feels
 /// like a jarring flash.
 class SplashCubit extends Cubit<SplashState> {
-  SplashCubit(this._localStorage) : super(const SplashInitial());
+  SplashCubit(this._localStorage, this._firebaseAuth) : super(const SplashInitial());
 
   final LocalStorageService _localStorage;
+  final FirebaseAuth? _firebaseAuth;
 
   Future<void> checkInitialRoute() async {
     emit(const SplashLoading());
@@ -27,7 +29,7 @@ class SplashCubit extends Cubit<SplashState> {
     try {
       final results = await Future.wait([
         _resolveDestination(),
-        Future.delayed(AppDurations.splash),
+        Future.delayed(AppDurations.slow), // Reduced for better UX during dev
       ]);
 
       final destination = results.first as SplashDestination;
@@ -42,9 +44,15 @@ class SplashCubit extends Cubit<SplashState> {
       return SplashDestination.onboarding;
     }
 
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      return SplashDestination.home;
+    if (_firebaseAuth != null) {
+      try {
+        final currentUser = _firebaseAuth.currentUser;
+        if (currentUser != null) {
+          return SplashDestination.home;
+        }
+      } catch (e) {
+        debugPrint('Firebase check failed: $e');
+      }
     }
 
     return SplashDestination.signIn;

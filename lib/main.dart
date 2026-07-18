@@ -10,18 +10,20 @@ import 'core/theme/theme_cubit.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // NOTE: Run `flutterfire configure` to generate `firebase_options.dart`,
-  // then switch this to:
-  //   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // Left as a platform-config-driven init for now so the app still runs
-  // before Firebase is wired up, since we're building screen by screen.
+  // IMPORTANT: You must run `flutterfire configure` to generate `firebase_options.dart`.
+  // Once generated, use: 
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  bool firebaseInitialized = false;
   try {
     await Firebase.initializeApp();
+    firebaseInitialized = true;
   } catch (e) {
-    debugPrint('Firebase not configured yet: $e');
+    debugPrint('Firebase initialization failed: $e');
+    // If you haven't run flutterfire configure, this will fail.
   }
 
-  await initDependencyInjection();
+  await initDependencyInjection(firebaseInitialized: firebaseInitialized);
 
   runApp(const NovaCartApp());
 }

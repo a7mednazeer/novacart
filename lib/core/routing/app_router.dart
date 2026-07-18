@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/pages/forgot_password_page.dart';
+import '../../features/auth/presentation/pages/sign_in_page.dart';
+import '../../features/auth/presentation/pages/sign_up_page.dart';
+import '../../features/home/presentation/pages/home_placeholder_page.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import 'app_routes.dart';
 
@@ -27,28 +32,32 @@ abstract class AppRouter {
       GoRoute(
         path: AppRoutes.onboarding,
         name: AppRoutes.onboarding,
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Onboarding (Coming Soon)')),
-        ),
+        builder: (context, state) => const OnboardingPage(),
       ),
       GoRoute(
         path: AppRoutes.signIn,
         name: AppRoutes.signIn,
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Sign In (Coming Soon)')),
-        ),
+        builder: (context, state) => const SignInPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.signUp,
+        name: AppRoutes.signUp,
+        builder: (context, state) => const SignUpPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: AppRoutes.forgotPassword,
+        builder: (context, state) => const ForgotPasswordPage(),
       ),
       GoRoute(
         path: AppRoutes.home,
         name: AppRoutes.home,
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Home (Coming Soon)')),
-        ),
+        builder: (context, state) => const HomePlaceholderPage(),
       ),
 
       // Upcoming routes (added as each screen is built):
-      // AppRoutes.onboarding, AppRoutes.signIn, AppRoutes.signUp,
-      // AppRoutes.home, AppRoutes.categories, AppRoutes.cart, ...
+      // AppRoutes.categories, AppRoutes.search, AppRoutes.productDetails,
+      // AppRoutes.wishlist, AppRoutes.cart, AppRoutes.checkout, ...
     ],
     errorBuilder: (context, state) => Scaffold(
       body: Center(

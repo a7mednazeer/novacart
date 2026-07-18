@@ -2,7 +2,8 @@
 
 A premium, production-grade Flutter e-commerce app.
 
-## Status: Step 1 of N — Foundation + Splash Screen ✅
+## Status: Step 2 of N — Onboarding + Full Auth Flow ✅
+(Step 1 — Foundation + Splash — is complete; summary retained below.)
 
 ## Architecture
 
@@ -96,9 +97,66 @@ states later.
    Onboarding vs Sign In vs Home (checks `hasSeenOnboarding` +
    `FirebaseAuth.currentUser`).
 
+## Step 2 — Onboarding + Auth (this delivery)
+
+**New folders**: `features/onboarding/`, `features/auth/{data,domain,presentation}`,
+`features/home/` (placeholder).
+
+1. **Onboarding**: 3-slide `PageView` (`OnboardingSlide` + `onboardingSlides`
+   data), `ExpandingDotsEffect` indicator, Skip/Next/Get Started CTA.
+   `OnboardingCubit` persists `hasSeenOnboarding` via `LocalStorageService`
+   and the page reacts by routing to Sign In.
+2. **Auth — full Clean Architecture**:
+   - `domain/entities/user_entity.dart` — Firebase-agnostic user model.
+   - `domain/repositories/auth_repository.dart` — the contract.
+   - `domain/usecases/*` — `SignInUseCase`, `SignUpUseCase`,
+     `ForgotPasswordUseCase`, `GoogleSignInUseCase`, `SignOutUseCase`.
+   - `data/models/user_model.dart` — Firebase User ↔ Firestore ↔ entity mapping.
+   - `data/datasources/auth_remote_datasource.dart` — the only file that
+     imports `firebase_auth` for auth logic; talks to Firebase Auth +
+     writes/reads a `users/{uid}` Firestore profile doc.
+   - `data/repositories/auth_repository_impl.dart` — catches
+     `FirebaseAuthException` and maps every common code (`user-not-found`,
+     `wrong-password`, `email-already-in-use`, etc.) to a friendly
+     `AuthFailure` message.
+   - `presentation/cubit/auth_cubit.dart` — one cubit, reused (fresh
+     instance per screen) by Sign In / Sign Up / Forgot Password / the
+     Home logout button.
+3. **Screens**: `SignInPage` (email/password, Remember Me, Forgot
+   Password link, Google sign-in, link to Sign Up), `SignUpPage` (name/
+   email/password/confirm, terms checkbox, sends email verification on
+   success), `ForgotPasswordPage` (send + resend reset link, success
+   state).
+4. **New reusable widgets** (`core/widgets`): `AppButton` (primary/
+   outlined/text, built-in loading spinner), `AppTextField` (label +
+   validation + password-visibility toggle). Auth-specific:
+   `AuthDivider`, `GoogleSignInButton` (code-drawn 4-color "G" mark —
+   no bundled SVG required).
+5. **New utils** (`core/utils`): `Validators` (email/password/name/phone/
+   confirm-password rules), `AppSnackBar` (consistent success/error/info
+   toasts).
+6. **Router**: `onboarding`, `signIn`, `signUp`, `forgotPassword`, `home`
+   routes now registered in `AppRouter`; `SplashPage` navigation is
+   un-commented and live.
+7. **`HomePlaceholderPage`**: a temporary screen (sign-out button +
+   confirmation) so the entire Splash → Onboarding → Auth → Home loop
+   is testable today. This is replaced by the real Home screen next.
+
+### Firebase setup required for this step
+Enable **Email/Password** and **Google** providers in Firebase Console →
+Authentication → Sign-in method. Firestore needs a `users` collection
+(created automatically on first sign-up) — add security rules restricting
+each doc to its own `uid` before going to production:
+```
+match /users/{userId} {
+  allow read, write: if request.auth != null && request.auth.uid == userId;
+}
+```
+
 ## Next step (awaiting your confirmation)
 
-**Onboarding screens** (3-slide intro with `PageView` +
-`smooth_page_indicator`), followed by **Sign In / Sign Up / Forgot
-Password**, fully wired to Firebase Auth — matching the routes already
-stubbed (commented) in `SplashPage`'s navigation listener.
+**The real Home Screen** — promotional banners/carousel, categories
+row, flash sales with countdown timer, best sellers, new arrivals,
+recommended products, recently viewed — plus the bottom navigation
+shell (Home / Categories / Wishlist / Profile) that every following
+screen will live inside.

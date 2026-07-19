@@ -19,7 +19,7 @@ class ProductRemoteDataSource {
 
   Future<List<ProductModel>> getAllProducts() async {
     if (_firestore == null) return mockProducts;
-    
+
     try {
       final snapshot = await _firestore!.collection('products').get();
       if (snapshot.docs.isEmpty) return mockProducts;
@@ -30,6 +30,11 @@ class ProductRemoteDataSource {
     } catch (_) {
       return mockProducts;
     }
+  }
+
+  Future<List<ProductModel>> getProductsByCategory(String category) async {
+    final all = await getAllProducts();
+    return all.where((p) => p.category == category).toList();
   }
 
   Future<List<BannerModel>> getBanners() async {

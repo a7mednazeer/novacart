@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:novacart/features/home/domain/entities/home_data.dart';
 import 'package:novacart/features/home/domain/repositories/home_repository.dart';
-import '../../../../core/errors/failures.dart';
-import '../../../product/data/datasources/category_mock_data.dart';
-import '../../../product/data/datasources/product_remote_datasource.dart';
+import 'package:novacart/core/errors/failures.dart';
+import 'package:novacart/features/product/data/datasources/category_mock_data.dart';
+import 'package:novacart/features/product/data/datasources/product_remote_datasource.dart';
 
 
 /// Builds the Home screen's sections (flash sale, best sellers, new

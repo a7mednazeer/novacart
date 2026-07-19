@@ -63,7 +63,10 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   void _openCategory(CategoryEntity category) {
-    AppSnackBar.showInfo(context, '${category.name} — coming in Categories screen');
+    context.pushNamed(
+      AppRoutes.categoryProducts,
+      extra: {'category': category.name},
+    );
   }
 
   @override
@@ -165,7 +168,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       titleSpacing: AppSpacing.lg,
       title: GestureDetector(
-        onTap: () => AppSnackBar.showInfo(context, 'Search — coming next'),
+        onTap: () => context.push(AppRoutes.search),
         child: Container(
           height: 42,
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),

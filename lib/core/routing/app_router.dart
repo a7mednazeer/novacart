@@ -4,10 +4,12 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
 import '../../features/auth/presentation/pages/sign_up_page.dart';
-import '../../features/categories/presentation/pages/categories_placeholder_page.dart';
+import '../../features/categories/presentation/pages/categories_page.dart';
+import '../../features/categories/presentation/pages/category_products_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/profile/presentation/pages/profile_placeholder_page.dart';
+import '../../features/search/presentation/pages/search_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/wishlist/presentation/pages/wishlist_placeholder_page.dart';
 import '../widgets/scaffold_with_nav_bar.dart';
@@ -76,7 +78,7 @@ abstract class AppRouter {
             GoRoute(
               path: AppRoutes.categories,
               name: AppRoutes.categories,
-              builder: (context, state) => const CategoriesPlaceholderPage(),
+              builder: (context, state) => const CategoriesPage(),
             ),
           ]),
           StatefulShellBranch(routes: [
@@ -96,9 +98,28 @@ abstract class AppRouter {
         ],
       ),
 
+      GoRoute(
+        path: AppRoutes.search,
+        name: AppRoutes.search,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SearchPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.categoryProducts,
+        name: AppRoutes.categoryProducts,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return CategoryProductsPage(
+            category: extra['category'] as String? ?? '',
+            subcategoryName: extra['subcategoryName'] as String?,
+          );
+        },
+      ),
+
       // Upcoming top-level routes (pushed on top of the shell, added as
-      // each screen is built): AppRoutes.search, AppRoutes.productDetails,
-      // AppRoutes.cart, AppRoutes.checkout, AppRoutes.orders, ...
+      // each screen is built): AppRoutes.productDetails, AppRoutes.cart,
+      // AppRoutes.checkout, AppRoutes.orders, ...
     ],
     errorBuilder: (context, state) => Scaffold(
       body: Center(

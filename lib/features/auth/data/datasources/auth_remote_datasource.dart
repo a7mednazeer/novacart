@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:google_sign_in/google_sign_in.dart' as google;
 
-import '../models/user_model.dart';
+import 'package:novacart/features/auth/data/models/user_model.dart';
 
 /// Talks directly to Firebase Auth / Firestore. This is the *only*
 /// place in the whole app allowed to import `firebase_auth` for

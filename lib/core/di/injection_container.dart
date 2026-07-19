@@ -1,28 +1,37 @@
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart' as google;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:dio/dio.dart';
+import 'package:google_sign_in/google_sign_in.dart' as google;
 
-import '../network/dio_client.dart';
-import '../services/local_storage_service.dart';
-import '../theme/theme_cubit.dart';
-import '../../features/splash/presentation/cubit/splash_cubit.dart';
-import '../../features/onboarding/presentation/cubit/onboarding_cubit.dart';
-import '../../features/auth/data/datasources/auth_remote_datasource.dart';
-import '../../features/auth/data/repositories/auth_repository_impl.dart';
-import '../../features/auth/domain/repositories/auth_repository.dart';
-import '../../features/auth/domain/usecases/forgot_password_usecase.dart';
-import '../../features/auth/domain/usecases/google_sign_in_usecase.dart';
-import '../../features/auth/domain/usecases/sign_in_usecase.dart';
-import '../../features/auth/domain/usecases/sign_out_usecase.dart';
-import '../../features/auth/domain/usecases/sign_up_usecase.dart';
-import '../../features/auth/presentation/cubit/auth_cubit.dart';
-import '../../features/product/data/datasources/product_remote_datasource.dart';
-import '../../features/home/data/repositories/home_repository_impl.dart';
-import '../../features/home/domain/repositories/home_repository.dart';
-import '../../features/home/domain/usecases/get_home_data_usecase.dart';
-import '../../features/home/presentation/cubit/home_cubit.dart';
+import 'package:novacart/core/network/dio_client.dart';
+import 'package:novacart/core/services/local_storage_service.dart';
+import 'package:novacart/core/theme/theme_cubit.dart';
+import 'package:novacart/features/splash/presentation/cubit/splash_cubit.dart';
+import 'package:novacart/features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import 'package:novacart/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:novacart/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:novacart/features/auth/domain/repositories/auth_repository.dart';
+import 'package:novacart/features/auth/domain/usecases/forgot_password_usecase.dart';
+import 'package:novacart/features/auth/domain/usecases/google_sign_in_usecase.dart';
+import 'package:novacart/features/auth/domain/usecases/sign_in_usecase.dart';
+import 'package:novacart/features/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:novacart/features/auth/domain/usecases/sign_up_usecase.dart';
+import 'package:novacart/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:novacart/features/product/data/datasources/product_remote_datasource.dart';
+import 'package:novacart/features/home/data/repositories/home_repository_impl.dart';
+import 'package:novacart/features/home/domain/repositories/home_repository.dart';
+import 'package:novacart/features/home/domain/usecases/get_home_data_usecase.dart';
+import 'package:novacart/features/home/presentation/cubit/home_cubit.dart';
+import 'package:novacart/features/categories/data/repositories/category_repository_impl.dart';
+import 'package:novacart/features/categories/domain/repositories/category_repository.dart';
+import 'package:novacart/features/categories/domain/usecases/get_products_by_category_usecase.dart';
+import 'package:novacart/features/categories/presentation/cubit/category_products_cubit.dart';
+import 'package:novacart/features/search/data/repositories/search_repository_impl.dart';
+import 'package:novacart/features/search/domain/repositories/search_repository.dart';
+import 'package:novacart/features/search/domain/usecases/search_products_usecase.dart';
+import 'package:novacart/features/search/presentation/cubit/search_cubit.dart';
 
 /// Global Service Locator.
 ///
@@ -125,4 +134,22 @@ Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   );
   sl.registerLazySingleton(() => GetHomeDataUseCase(sl()));
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl()));
+
+  // ---------------------------------------------------------------------
+  // Feature: Categories
+  // ---------------------------------------------------------------------
+  sl.registerLazySingleton<CategoryRepository>(
+    () => CategoryRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetProductsByCategoryUseCase(sl()));
+  sl.registerFactory<CategoryProductsCubit>(() => CategoryProductsCubit(sl()));
+
+  // ---------------------------------------------------------------------
+  // Feature: Search
+  // ---------------------------------------------------------------------
+  sl.registerLazySingleton<SearchRepository>(
+    () => SearchRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => SearchProductsUseCase(sl()));
+  sl.registerFactory<SearchCubit>(() => SearchCubit(sl(), sl()));
 }

@@ -2,8 +2,8 @@
 
 A premium, production-grade Flutter e-commerce app.
 
-## Status: Step 3 of N — Home Screen + Bottom Nav Shell ✅
-(Steps 1–2 — Foundation/Splash and Onboarding/Auth — are complete; summaries retained below.)
+## Status: Step 4 of N — Categories + Search ✅
+(Steps 1–3 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell — are complete; summaries retained below.)
 
 ## Architecture
 
@@ -200,9 +200,53 @@ fallback. When ready to go live, seed two collections:
 - `products` — shape matches `ProductModel.toFirestore()`
 - `banners` — shape matches the fields read in `BannerModel.fromFirestore()`
 
+## Step 4 — Categories + Search (this delivery)
+
+**New folders**: `features/categories/{domain,data,presentation}`,
+`features/search/{domain,data,presentation}`. Extended `features/product/`
+with `SubcategoryEntity`, `ProductFilter`, and `FilterProducts`.
+
+1. **Shared filter/sort infrastructure** (in `product/domain`, reused by
+   both features — this is the key architectural point of this step):
+   `ProductFilter` (price range, min rating, brands, sort option) and
+   `FilterProducts.call()`, a pure function both `CategoryProductsCubit`
+   and `SearchCubit` call with their own product list. One filter UI
+   (`showProductFilterSheet`, in `core/widgets`) is shared by both
+   screens too.
+2. **Categories tab** (replaces the earlier placeholder): a sidebar of
+   top-level categories (`CategorySidebar`) + a content pane
+   (`SubcategoryGrid`) showing a category banner and its subcategories
+   (`Women's Fashion`/`Men's Fashion` have full subcategory sets
+   matching the original design; other categories fall back to a
+   "Browse All" button — realistic for categories that don't need
+   deep subcategorization).
+3. **Category Products screen** (pushed on top of the shell, has a back
+   button): 2-column product grid, live result count, Filter & Sort
+   button opening the shared bottom sheet, shimmer skeleton while
+   loading, and a proper empty state ("No products found" + "Clear
+   Filters" action) — distinct from the error state, which has "Try
+   Again" instead.
+4. **Search screen**: debounced instant search (400ms — `SearchCubit`
+   owns its own `Timer`), recent search history (persisted via new
+   `LocalStorageService.recentSearches` methods — add/remove/clear),
+   trending-search suggestion chips, the same filter sheet + product
+   grid as Categories, and distinct empty states for "no results for
+   this query" vs. "no results after filtering." Voice search has a
+   clearly-labeled stub (`mic` icon → snackbar) rather than a half-built
+   `speech_to_text` integration; wiring a real mic requires a
+   permissions flow that deserves review before shipping.
+5. **New reusable widgets** (`core/widgets`): `EmptyStateView` (valid
+   empty result, no retry — contrast with `ErrorStateView`),
+   `ProductFilterSheet`.
+6. **Data layer**: `ProductRemoteDataSource.getProductsByCategory()`
+   added; `SearchRepositoryImpl` filters the shared catalog client-side
+   by name/brand/category (documented as a placeholder for a real
+   search index like Algolia once the catalog grows beyond what a
+   client-side filter can handle quickly).
+
 ## Next step (awaiting your confirmation)
 
-**Categories screen** (grid + subcategories + filter/sort) and **Search**
-(instant suggestions, recent searches, advanced filters) — the two
-remaining bottom-nav-adjacent screens before Product Details, Wishlist,
-and Cart.
+**Product Details screen** — image gallery with zoom, size/color
+selectors, quantity, ratings & reviews, specifications, shipping info,
+similar products — the screen every "Opening {product}…" stub tap is
+waiting to become a real navigation.

@@ -46,6 +46,34 @@ class LocalStorageService {
       _prefs.setBool(StorageKeys.rememberMe, value);
 
   // ---------------------------------------------------------------------
+  // Recent searches (non-sensitive → SharedPreferences)
+  // ---------------------------------------------------------------------
+  static const int _maxRecentSearches = 10;
+
+  List<String> get recentSearches =>
+      _prefs.getStringList(StorageKeys.recentSearches) ?? const [];
+
+  Future<void> addRecentSearch(String query) async {
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) return;
+
+    final updated = [
+      trimmed,
+      ...recentSearches.where((q) => q.toLowerCase() != trimmed.toLowerCase()),
+    ].take(_maxRecentSearches).toList();
+
+    await _prefs.setStringList(StorageKeys.recentSearches, updated);
+  }
+
+  Future<void> removeRecentSearch(String query) async {
+    final updated = recentSearches.where((q) => q != query).toList();
+    await _prefs.setStringList(StorageKeys.recentSearches, updated);
+  }
+
+  Future<void> clearRecentSearches() =>
+      _prefs.remove(StorageKeys.recentSearches);
+
+  // ---------------------------------------------------------------------
   // Sensitive data (→ SecureStorage)
   // ---------------------------------------------------------------------
   Future<String?> get authToken =>

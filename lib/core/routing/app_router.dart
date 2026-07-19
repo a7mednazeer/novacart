@@ -8,6 +8,7 @@ import '../../features/categories/presentation/pages/categories_page.dart';
 import '../../features/categories/presentation/pages/category_products_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/product_details/presentation/pages/product_details_page.dart';
 import '../../features/profile/presentation/pages/profile_placeholder_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
@@ -116,10 +117,18 @@ abstract class AppRouter {
           );
         },
       ),
+      GoRoute(
+        path: AppRoutes.productDetails,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return ProductDetailsPage(productId: id);
+        },
+      ),
 
       // Upcoming top-level routes (pushed on top of the shell, added as
-      // each screen is built): AppRoutes.productDetails, AppRoutes.cart,
-      // AppRoutes.checkout, AppRoutes.orders, ...
+      // each screen is built): AppRoutes.cart, AppRoutes.checkout,
+      // AppRoutes.orders, ...
     ],
     errorBuilder: (context, state) => Scaffold(
       body: Center(

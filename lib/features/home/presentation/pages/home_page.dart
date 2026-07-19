@@ -57,9 +57,7 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   void _openProduct(ProductEntity product) {
-    // Product Details screen is the next build step — this navigation
-    // call is ready to go as soon as that route exists.
-    AppSnackBar.showInfo(context, 'Opening ${product.name}…');
+    context.push(AppRoutes.productDetailsPath(product.id));
   }
 
   void _openCategory(CategoryEntity category) {

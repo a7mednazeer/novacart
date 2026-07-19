@@ -2,8 +2,8 @@
 
 A premium, production-grade Flutter e-commerce app.
 
-## Status: Step 4 of N — Categories + Search ✅
-(Steps 1–3 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell — are complete; summaries retained below.)
+## Status: Step 5 of N — Product Details ✅
+(Steps 1–4 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search — are complete; summaries retained below.)
 
 ## Architecture
 
@@ -244,9 +244,47 @@ with `SubcategoryEntity`, `ProductFilter`, and `FilterProducts`.
    search index like Algolia once the catalog grows beyond what a
    client-side filter can handle quickly).
 
+## Step 5 — Product Details (this delivery)
+
+**New folder**: `features/product_details/{domain,data,presentation}`.
+**Relocated**: `ProductHorizontalList` moved from `features/home/presentation/widgets`
+into `core/widgets` since Product Details' "You Might Also Like" section
+needed it too — the first real cross-feature reuse beyond the Product
+entity itself.
+
+1. **Domain**: `ReviewEntity`, `ProductDetailsData` (aggregates product +
+   reviews + similar products + a computed `ratingBreakdown` histogram,
+   same pattern as `HomeData`).
+2. **Data**: `ProductDetailsRepositoryImpl` finds the product by id in
+   the shared catalog, computes "similar products" as same-category
+   products excluding itself, and pairs it with `generateMockReviews()`
+   — a deterministic per-product mock review generator (clearly labeled
+   or replace with a real `products/{id}/reviews` Firestore
+   subcollection once ready).
+3. **`ProductDetailsCubit`**: loads the aggregate and owns the screen's
+   interactive state — selected color, selected size, quantity,
+   favorite toggle — all as immutable state transitions, not `setState`.
+4. **Screen**: swipeable image gallery with a pinch-to-zoom full-screen
+   viewer (`photo_view`), Hero transition from the product card's image
+   (the Hero tag was set up back in Step 3 anticipating this), color
+   swatches parsed from hex, size chips, "Read More" expandable
+   description, rating breakdown bars + review cards + "view all
+   reviews" bottom sheet, shipping/return/specs info, similar products
+   row, and a sticky bottom Add-to-Cart bar with a quantity stepper and
+   live total price — animated in with `flutter_animate`.
+5. **Routing**: `AppRoutes.productDetails` is now a real path parameter
+   route (`/product-details/:id`) with a `productDetailsPath(id)`
+   helper; every "Opening {product}…" stub across Home, Categories, and
+   Search now pushes here for real.
+6. **Wishlist note**: the heart-toggle on this screen (and on
+   `ProductCard` everywhere) is still local/presentation-only — the
+   Wishlist build step replaces it with a shared, Firestore-backed
+   cubit so favoriting a product anywhere in the app stays in sync.
+
 ## Next step (awaiting your confirmation)
 
-**Product Details screen** — image gallery with zoom, size/color
-selectors, quantity, ratings & reviews, specifications, shipping info,
-similar products — the screen every "Opening {product}…" stub tap is
-waiting to become a real navigation.
+**Wishlist** (replacing today's local-only favorite toggles with a real,
+synced-to-Firestore implementation shared across Home/Categories/Search/
+Product Details) and **Cart** (quantities, remove, coupons, tax/shipping
+calculation, save-for-later) — the two screens every "Add to Cart" /
+heart tap has been stubbed toward.

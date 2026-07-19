@@ -8,6 +8,10 @@ import 'package:google_sign_in/google_sign_in.dart' as google;
 import 'package:novacart/core/network/dio_client.dart';
 import 'package:novacart/core/services/local_storage_service.dart';
 import 'package:novacart/core/theme/theme_cubit.dart';
+import 'package:novacart/features/product_details/data/repositories/product_details_repository_impl.dart';
+import 'package:novacart/features/product_details/domain/repositories/product_details_repository.dart';
+import 'package:novacart/features/product_details/domain/usecases/get_product_details_usecase.dart';
+import 'package:novacart/features/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:novacart/features/splash/presentation/cubit/splash_cubit.dart';
 import 'package:novacart/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:novacart/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -152,4 +156,13 @@ Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   );
   sl.registerLazySingleton(() => SearchProductsUseCase(sl()));
   sl.registerFactory<SearchCubit>(() => SearchCubit(sl(), sl()));
+
+  // ---------------------------------------------------------------------
+  // Feature: Product Details
+  // ---------------------------------------------------------------------
+  sl.registerLazySingleton<ProductDetailsRepository>(
+    () => ProductDetailsRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetProductDetailsUseCase(sl()));
+  sl.registerFactory<ProductDetailsCubit>(() => ProductDetailsCubit(sl()));
 }

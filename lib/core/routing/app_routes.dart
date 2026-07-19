@@ -16,7 +16,8 @@ abstract class AppRoutes {
   static const String categories = '/categories';
   static const String categoryProducts = '/category-products';
   static const String search = '/search';
-  static const String productDetails = '/product-details';
+  static const String productDetails = '/product-details/:id';
+  static String productDetailsPath(String id) => '/product-details/$id';
   static const String wishlist = '/wishlist';
   static const String cart = '/cart';
   static const String checkout = '/checkout';

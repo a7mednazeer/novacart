@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/routing/app_routes.dart';
 import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/widgets/empty_state_view.dart';
 import '../../../../core/widgets/error_state_view.dart';
@@ -272,7 +274,7 @@ class _ResultsView extends StatelessWidget {
                         product: product,
                         width: constraints.maxWidth,
                         onTap: () =>
-                            AppSnackBar.showInfo(context, 'Opening ${product.name}…'),
+                            context.push(AppRoutes.productDetailsPath(product.id)),
                       ),
                     );
                   },

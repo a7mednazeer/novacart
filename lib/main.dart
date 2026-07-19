@@ -10,19 +10,18 @@ import 'core/theme/theme_cubit.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // IMPORTANT: You must run `flutterfire configure` to generate `firebase_options.dart`.
-  // Once generated, use: 
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
   bool firebaseInitialized = false;
   try {
+    // If you haven't run `flutterfire configure`, this will likely fail
+    // unless you have manual google-services.json / GoogleService-Info.plist.
     await Firebase.initializeApp();
     firebaseInitialized = true;
   } catch (e) {
-    debugPrint('Firebase initialization failed: $e');
-    // If you haven't run flutterfire configure, this will fail.
+    debugPrint('Firebase not configured yet: $e');
   }
 
+  // We pass the initialization status to DI so it knows whether to 
+  // provide real Firebase instances or nulls (for dev/mock mode).
   await initDependencyInjection(firebaseInitialized: firebaseInitialized);
 
   runApp(const NovaCartApp());

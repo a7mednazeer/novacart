@@ -18,6 +18,11 @@ import '../../features/auth/domain/usecases/sign_in_usecase.dart';
 import '../../features/auth/domain/usecases/sign_out_usecase.dart';
 import '../../features/auth/domain/usecases/sign_up_usecase.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/product/data/datasources/product_remote_datasource.dart';
+import '../../features/home/data/repositories/home_repository_impl.dart';
+import '../../features/home/domain/repositories/home_repository.dart';
+import '../../features/home/domain/usecases/get_home_data_usecase.dart';
+import '../../features/home/presentation/cubit/home_cubit.dart';
 
 /// Global Service Locator.
 ///
@@ -28,7 +33,7 @@ import '../../features/auth/presentation/cubit/auth_cubit.dart';
 /// repositories/cubits that consume them.
 final GetIt sl = GetIt.instance;
 
-Future<void> initDependencyInjection({bool firebaseInitialized = true}) async {
+Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   // ---------------------------------------------------------------------
   // External / Firebase / third-party singletons
   // ---------------------------------------------------------------------
@@ -99,4 +104,25 @@ Future<void> initDependencyInjection({bool firebaseInitialized = true}) async {
       localStorage: sl(),
     ),
   );
+
+  // Feature registrations (Cart, Checkout, ...) are appended here as
+  // each feature's data/domain/presentation layers are built.
+
+  // ---------------------------------------------------------------------
+  // Feature: Product (shared catalog data source)
+  // ---------------------------------------------------------------------
+  sl.registerLazySingleton<ProductRemoteDataSource>(
+    () => ProductRemoteDataSource(
+      firebaseInitialized ? sl<FirebaseFirestore>() : null,
+    ),
+  );
+
+  // ---------------------------------------------------------------------
+  // Feature: Home
+  // ---------------------------------------------------------------------
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetHomeDataUseCase(sl()));
+  sl.registerFactory<HomeCubit>(() => HomeCubit(sl()));
 }

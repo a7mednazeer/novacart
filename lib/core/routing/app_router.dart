@@ -4,15 +4,22 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
 import '../../features/auth/presentation/pages/sign_up_page.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/categories/presentation/pages/categories_page.dart';
 import '../../features/categories/presentation/pages/category_products_page.dart';
+import '../../features/checkout/domain/entities/order_entity.dart';
+import '../../features/checkout/presentation/pages/checkout_page.dart';
+import '../../features/checkout/presentation/pages/order_confirmation_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/orders/presentation/pages/order_history_page.dart';
+import '../../features/orders/presentation/pages/order_tracking_page.dart';
 import '../../features/product_details/presentation/pages/product_details_page.dart';
+import '../../features/profile/presentation/pages/manage_addresses_page.dart';
 import '../../features/profile/presentation/pages/profile_placeholder_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
-import '../../features/wishlist/presentation/pages/wishlist_placeholder_page.dart';
+import '../../features/wishlist/presentation/pages/wishlist_page.dart';
 import '../widgets/scaffold_with_nav_bar.dart';
 import 'app_routes.dart';
 
@@ -86,7 +93,7 @@ abstract class AppRouter {
             GoRoute(
               path: AppRoutes.wishlist,
               name: AppRoutes.wishlist,
-              builder: (context, state) => const WishlistPlaceholderPage(),
+              builder: (context, state) => const WishlistPage(),
             ),
           ]),
           StatefulShellBranch(routes: [
@@ -125,10 +132,49 @@ abstract class AppRouter {
           return ProductDetailsPage(productId: id);
         },
       ),
+      GoRoute(
+        path: AppRoutes.cart,
+        name: AppRoutes.cart,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const CartPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.checkout,
+        name: AppRoutes.checkout,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const CheckoutPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderConfirmation,
+        name: AppRoutes.orderConfirmation,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => OrderConfirmationPage(
+          order: state.extra as OrderEntity,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.orders,
+        name: AppRoutes.orders,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const OrderHistoryPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderTracking,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return OrderTrackingPage(orderId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.manageAddresses,
+        name: AppRoutes.manageAddresses,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ManageAddressesPage(),
+      ),
 
       // Upcoming top-level routes (pushed on top of the shell, added as
-      // each screen is built): AppRoutes.cart, AppRoutes.checkout,
-      // AppRoutes.orders, ...
+      // each screen is built): AppRoutes.notifications, ...
     ],
     errorBuilder: (context, state) => Scaffold(
       body: Center(

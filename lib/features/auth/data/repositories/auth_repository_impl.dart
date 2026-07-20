@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 
-import 'package:novacart/core/errors/failures.dart';
-import 'package:novacart/features/auth/domain/entities/user_entity.dart';
-import 'package:novacart/features/auth/domain/repositories/auth_repository.dart';
-import 'package:novacart/features/auth/data/datasources/auth_remote_datasource.dart';
+import '../../../../core/errors/failures.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_remote_datasource.dart';
 
 /// Concrete [AuthRepository]. This is the boundary where Firebase
 /// exceptions get translated into domain [Failure]s with messages

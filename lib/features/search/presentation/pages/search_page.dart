@@ -13,6 +13,7 @@ import '../../../../core/widgets/error_state_view.dart';
 import '../../../../core/widgets/product_card.dart';
 import '../../../../core/widgets/product_filter_sheet.dart';
 import '../../../../core/widgets/shimmer_box.dart';
+import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
 import '../cubit/search_cubit.dart';
 
 class SearchPage extends StatelessWidget {
@@ -269,13 +270,20 @@ class _ResultsView extends StatelessWidget {
                   ),
                   itemBuilder: (context, index) {
                     final product = state.filteredResults[index];
-                    return LayoutBuilder(
-                      builder: (context, constraints) => ProductCard(
-                        product: product,
-                        width: constraints.maxWidth,
-                        onTap: () =>
-                            context.push(AppRoutes.productDetailsPath(product.id)),
-                      ),
+                    return BlocBuilder<WishlistCubit, WishlistState>(
+                      builder: (context, wishlistState) {
+                        return LayoutBuilder(
+                          builder: (context, constraints) => ProductCard(
+                            product: product,
+                            width: constraints.maxWidth,
+                            isFavorite: wishlistState.ids.contains(product.id),
+                            onFavoriteToggle: () =>
+                                context.read<WishlistCubit>().toggle(product.id),
+                            onTap: () =>
+                                context.push(AppRoutes.productDetailsPath(product.id)),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

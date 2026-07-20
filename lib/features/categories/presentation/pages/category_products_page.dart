@@ -12,6 +12,7 @@ import '../../../../core/widgets/error_state_view.dart';
 import '../../../../core/widgets/product_card.dart';
 import '../../../../core/widgets/product_filter_sheet.dart';
 import '../../../../core/widgets/shimmer_box.dart';
+import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
 import '../cubit/category_products_cubit.dart';
 
 class CategoryProductsPage extends StatelessWidget {
@@ -132,13 +133,20 @@ class _CategoryProductsView extends StatelessWidget {
                         ),
                         itemBuilder: (context, index) {
                           final product = loaded.filteredProducts[index];
-                          return LayoutBuilder(
-                            builder: (context, constraints) => ProductCard(
-                              product: product,
-                              width: constraints.maxWidth,
-                              onTap: () => context
-                                  .push(AppRoutes.productDetailsPath(product.id)),
-                            ),
+                          return BlocBuilder<WishlistCubit, WishlistState>(
+                            builder: (context, wishlistState) {
+                              return LayoutBuilder(
+                                builder: (context, constraints) => ProductCard(
+                                  product: product,
+                                  width: constraints.maxWidth,
+                                  isFavorite: wishlistState.ids.contains(product.id),
+                                  onFavoriteToggle: () =>
+                                      context.read<WishlistCubit>().toggle(product.id),
+                                  onTap: () => context
+                                      .push(AppRoutes.productDetailsPath(product.id)),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),

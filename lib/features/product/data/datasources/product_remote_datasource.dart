@@ -13,15 +13,18 @@ import 'product_mock_data.dart';
 /// changes** — the fallback simply stops triggering because the
 /// `.get()` calls stop returning empty snapshots.
 class ProductRemoteDataSource {
-  ProductRemoteDataSource(this._firestore);
+  ProductRemoteDataSource(FirebaseFirestore? firestore) : _firestore = firestore;
 
+  /// Nullable so the app can run in "Mock Mode" if Firebase 
+  /// isn't initialized yet.
   final FirebaseFirestore? _firestore;
 
   Future<List<ProductModel>> getAllProducts() async {
+    // Fallback to mock data if Firestore is missing
     if (_firestore == null) return mockProducts;
 
     try {
-      final snapshot = await _firestore!.collection('products').get();
+      final snapshot = await _firestore.collection('products').get();
       if (snapshot.docs.isEmpty) return mockProducts;
 
       return snapshot.docs
@@ -38,10 +41,11 @@ class ProductRemoteDataSource {
   }
 
   Future<List<BannerModel>> getBanners() async {
+    // Fallback to mock data if Firestore is missing
     if (_firestore == null) return mockBanners;
 
     try {
-      final snapshot = await _firestore!.collection('banners').get();
+      final snapshot = await _firestore.collection('banners').get();
       if (snapshot.docs.isEmpty) return mockBanners;
 
       return snapshot.docs

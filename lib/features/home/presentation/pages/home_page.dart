@@ -9,13 +9,16 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/widgets/error_state_view.dart';
+import '../../../../core/widgets/cart_icon_button.dart';
+import '../../../cart/presentation/cubit/cart_cubit.dart';
 import '../../../product/domain/entities/category_entity.dart';
 import '../../../product/domain/entities/product_entity.dart';
+import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
 import '../cubit/home_cubit.dart';
 import '../widgets/category_quick_list.dart';
 import '../widgets/flash_sale_section.dart';
 import '../widgets/home_loading_skeleton.dart';
-import '../widgets/product_horizontal_list.dart';
+import '../../../../core/widgets/product_horizontal_list.dart';
 import '../widgets/promo_banner_carousel.dart';
 import '../widgets/section_header.dart';
 
@@ -39,21 +42,18 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
-  // NOTE: Wishlist toggling here is local, presentation-only state for
-  // now — it gives instant visual feedback on the Home screen. The
-  // Wishlist feature (built in a later step) owns the real persisted
-  // source of truth in Firestore and will replace this set with a
-  // stream from `WishlistCubit`.
-  final Set<String> _favoriteIds = {};
+  @override
+  void initState() {
+    super.initState();
+    // Home is the first screen reached after a successful sign-in, so
+    // this is where the app-wide Wishlist/Cart Firestore subscriptions
+    // start. Both calls are idempotent — safe even if already started.
+    sl<WishlistCubit>().ensureStarted();
+    sl<CartCubit>().ensureStarted();
+  }
 
   void _toggleFavorite(ProductEntity product) {
-    setState(() {
-      if (_favoriteIds.contains(product.id)) {
-        _favoriteIds.remove(product.id);
-      } else {
-        _favoriteIds.add(product.id);
-      }
-    });
+    sl<WishlistCubit>().toggle(product.id);
   }
 
   void _openProduct(ProductEntity product) {
@@ -61,16 +61,13 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   void _openCategory(CategoryEntity category) {
-    context.pushNamed(
-      AppRoutes.categoryProducts,
-      extra: {'category': category.name},
-    );
+    AppSnackBar.showInfo(context, '${category.name} — coming in Categories screen');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _HomeAppBar(),
+      appBar: const _HomeAppBar(),
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
@@ -85,6 +82,7 @@ class _HomeViewState extends State<_HomeView> {
           }
 
           final data = (state as HomeLoaded).data;
+          final favoriteIds = context.watch<WishlistCubit>().state.ids;
 
           return RefreshIndicator(
             color: AppColors.primary,
@@ -115,7 +113,7 @@ class _HomeViewState extends State<_HomeView> {
                   products: data.flashSaleProducts,
                   onProductTap: _openProduct,
                   onFavoriteToggle: _toggleFavorite,
-                  favoriteIds: _favoriteIds,
+                  favoriteIds: favoriteIds,
                 ),
                 if (data.flashSaleProducts.isNotEmpty)
                   const SizedBox(height: AppSpacing.xl),
@@ -125,7 +123,7 @@ class _HomeViewState extends State<_HomeView> {
                   products: data.bestSellers,
                   onProductTap: _openProduct,
                   onFavoriteToggle: _toggleFavorite,
-                  favoriteIds: _favoriteIds,
+                  favoriteIds: favoriteIds,
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 const SectionHeader(title: '✨ New Arrivals'),
@@ -134,7 +132,7 @@ class _HomeViewState extends State<_HomeView> {
                   products: data.newArrivals,
                   onProductTap: _openProduct,
                   onFavoriteToggle: _toggleFavorite,
-                  favoriteIds: _favoriteIds,
+                  favoriteIds: favoriteIds,
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 const SectionHeader(title: 'Recommended for You'),
@@ -143,7 +141,7 @@ class _HomeViewState extends State<_HomeView> {
                   products: data.recommended,
                   onProductTap: _openProduct,
                   onFavoriteToggle: _toggleFavorite,
-                  favoriteIds: _favoriteIds,
+                  favoriteIds: favoriteIds,
                 ),
                 const SizedBox(height: AppSpacing.xl),
               ],
@@ -155,10 +153,10 @@ class _HomeViewState extends State<_HomeView> {
   }
 }
 
-/// Custom app bar: search field (routes to Search — next build step)
-/// + cart and notifications icons.
+/// Custom app bar: search field + notifications + cart (with a live
+/// item-count badge sourced from the app-wide `CartCubit`).
 class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  _HomeAppBar();
+  const _HomeAppBar();
 
   @override
   Widget build(BuildContext context) {
@@ -193,10 +191,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () =>
               AppSnackBar.showInfo(context, 'Notifications — coming soon'),
         ),
-        IconButton(
-          icon: const Icon(Icons.shopping_cart_outlined),
-          onPressed: () => AppSnackBar.showInfo(context, 'Cart — coming soon'),
-        ),
+        const CartIconButton(),
         const SizedBox(width: AppSpacing.xs),
       ],
     );
@@ -205,3 +200,4 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+

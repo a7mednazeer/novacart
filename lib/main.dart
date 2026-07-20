@@ -6,22 +6,26 @@ import 'core/di/injection_container.dart';
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
+import 'features/cart/presentation/cubit/cart_cubit.dart';
+import 'features/wishlist/presentation/cubit/wishlist_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   bool firebaseInitialized = false;
   try {
-    // If you haven't run `flutterfire configure`, this will likely fail
-    // unless you have manual google-services.json / GoogleService-Info.plist.
+    // Attempt initialization (requires google-services.json / GoogleService-Info.plist)
     await Firebase.initializeApp();
-    firebaseInitialized = true;
+    
+    // Verify that the Firebase app was actually created
+    if (Firebase.apps.isNotEmpty) {
+      firebaseInitialized = true;
+    }
   } catch (e) {
     debugPrint('Firebase not configured yet: $e');
   }
 
-  // We pass the initialization status to DI so it knows whether to 
-  // provide real Firebase instances or nulls (for dev/mock mode).
+  // Tell the dependency injection system whether to use real Firebase or Mock mode.
   await initDependencyInjection(firebaseInitialized: firebaseInitialized);
 
   runApp(const NovaCartApp());
@@ -35,6 +39,12 @@ class NovaCartApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ThemeCubit>.value(value: sl<ThemeCubit>()),
+        BlocProvider<WishlistCubit>.value(
+          value: sl<WishlistCubit>()..ensureStarted(),
+        ),
+        BlocProvider<CartCubit>.value(
+          value: sl<CartCubit>()..ensureStarted(),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

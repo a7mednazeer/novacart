@@ -2,8 +2,8 @@
 
 A premium, production-grade Flutter e-commerce app.
 
-## Status: Step 5 of N — Product Details ✅
-(Steps 1–4 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search — are complete; summaries retained below.)
+## Status: Step 8 of N — Order History + Tracking, Saved Addresses ✅
+(Steps 1–7 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search, Product Details, Wishlist/Cart, Checkout — are complete; summaries retained below.)
 
 ## Architecture
 
@@ -281,10 +281,134 @@ entity itself.
    Wishlist build step replaces it with a shared, Firestore-backed
    cubit so favoriting a product anywhere in the app stays in sync.
 
+## Step 6 — Wishlist + Cart (this delivery)
+
+**New folders**: `features/wishlist/{domain,data,presentation}`,
+`features/cart/{domain,data,presentation}`. **New shared infrastructure**:
+`ProductCatalogRepository` + `GetProductsByIdsUseCase` (in `product/domain`),
+`CurrentUserService` (in `core/services`), `CartIconButton` (in `core/widgets`).
+
+**The key shift in this step**: `WishlistCubit` and `CartCubit` are
+registered as **app-wide singletons** (`registerLazySingleton`, not
+`registerFactory`) and provided once at the root in `main.dart` —
+unlike every cubit before them, which was a fresh instance per screen.
+This is what makes favoriting a product on Home instantly show as
+favorited on Search, Categories, Product Details, and the Wishlist tab
+with zero manual refresh: every screen reads the *same* cubit instance.
+
+1. **Wishlist**: Firestore-backed (`users/{uid}/wishlist/{productId}`),
+   real-time via `watchWishlistIds()`, optimistic toggle (UI updates
+   instantly, Firestore write happens in the background, the stream
+   reconciles). `ensureStarted()` is idempotent and uid-aware — safe to
+   call from every screen's `initState`, and correctly re-subscribes if
+   a different user signs in. The Wishlist tab now shows real favorited
+   products in a grid, with pull-to-refresh and a proper empty state.
+2. **Cart**: Firestore-backed (`users/{uid}/cart` +
+   `users/{uid}/savedForLater`), same live-sync pattern. `CartState`
+   computes subtotal, coupon discount, shipping (free over EGP 1000,
+   flat EGP 50 otherwise), 14% VAT, and total as pure getters — never
+   stored, always derived from the current line items. Coupon codes
+   (`NOVA10`, `NOVA20`, `WELCOME15`) are validated client-side for this
+   demo; documented in-code as needing a server-side check (Cloud
+   Function) before accepting real payments. Full Cart screen: item
+   cards with quantity stepper/remove/save-for-later, a Saved for Later
+   section with "Move to Cart", coupon input, order summary, and a
+   sticky Checkout bar.
+3. **Every screen updated**: Home, Categories, Search, and Product
+   Details all now read favorite state from the shared `WishlistCubit`
+   instead of local `Set<String>` state; Product Details' Add to Cart
+   button calls the real `CartCubit.addItem()`; a new shared
+   `CartIconButton` (icon + live item-count badge) replaces the
+   "Cart — coming soon" stub in Home/Categories/Product Details app bars.
+4. **Firestore setup**: two new subcollections per user —
+   `users/{uid}/wishlist` and `users/{uid}/cart` /
+   `users/{uid}/savedForLater`. Add rules restricting each to its owner,
+   same pattern as the `users` collection rule from Step 2:
+   ```
+   match /users/{userId}/{collection}/{docId} {
+     allow read, write: if request.auth != null && request.auth.uid == userId;
+   }
+   ```
+
+## Step 7 — Checkout (this delivery)
+
+**New folder**: `features/checkout/{domain,data,presentation}`. **Cart
+extended**: added `clearCart()` (repository → data source → cubit),
+called right after a successful order.
+
+1. **Domain**: `AddressEntity`, `PaymentMethodType` (enum with
+   label/subtitle/icon via extension — Cash on Delivery, Card, Apple
+   Pay, Google Pay), `OrderItemEntity` (a **snapshot** — name/price/image
+   copied at purchase time, deliberately not a live catalog reference,
+   so order history stays accurate even if a product is later repriced
+   or removed), `OrderEntity` (+ `OrderStatus` enum for the future Order
+   Tracking step).
+2. **`CheckoutCubit` is a per-session factory**, not a singleton like
+   Wishlist/Cart — its state (current step, selected address/payment)
+   has no reason to outlive one checkout attempt. It takes cart items
+   and computed totals as *parameters* to `placeOrder()` rather than
+   depending on `CartCubit` directly, keeping the two features
+   decoupled — the page reads `CartCubit` and passes the data in.
+3. **Screen**: a 3-step flow (Address → Payment → Review) with a
+   progress header, address list + "Add New Address" bottom sheet
+   (Firestore-backed, auto-selects the new one), 4 payment method tiles
+   with a demo disclaimer for non-COD methods (card/Apple Pay/Google Pay
+   are visual only — no real payment processing, clearly commented as
+   the Stripe/PSP integration point), and a Review step reusing the
+   same `OrderSummaryCard` from Cart. Placing an order writes to
+   Firestore, clears the cart, and pushes an animated **Order
+   Confirmation** screen (success checkmark, order summary, "Continue
+   Shopping").
+4. **Coupons carry through**: whatever coupon was applied in Cart
+   travels with the order (`couponCode` field) so order history will
+   later show exactly what discount was used.
+5. **Firestore setup**: two more per-user subcollections —
+   `users/{uid}/addresses` and `users/{uid}/orders` — same ownership
+   rule pattern as before.
+
+## Step 8 — Order History + Tracking, Saved Addresses (this delivery)
+
+**New folder**: `features/orders/presentation/{cubit,pages,widgets}` —
+presentation-only, deliberately reusing Checkout's `OrderRepository`/
+`OrderEntity` rather than duplicating the order domain model. **New in
+Checkout**: `AddressManagementCubit` (a generic address-book cubit,
+distinct from `CheckoutCubit`'s session-scoped one) plus
+`DeleteAddressUseCase`/`SetDefaultAddressUseCase`.
+
+1. **A bug fix worth flagging**: `CheckoutCubit.placeOrder()` was
+   emitting the pre-save `OrderEntity` (with an empty `id`) instead of
+   the Firestore-assigned one returned by `PlaceOrderUseCase` — added
+   `OrderEntity.copyWith()` and fixed the cubit to attach the real id.
+   Without this, "View Order" and Order History navigation would have
+   pushed to a non-existent order id.
+2. **`OrderHistoryCubit`**: live list of the signed-in user's orders,
+   newest first (Firestore `orderBy('createdAt', descending: true)`).
+3. **`OrderDetailsCubit`**: takes an order id via GetIt's
+   `registerFactoryParam` (`sl<OrderDetailsCubit>(param1: orderId)`) —
+   the first parameterized DI registration in the app — and filters the
+   same `watchOrders` stream to one order rather than adding a second
+   Firestore read pattern for what's the same underlying data.
+4. **`OrderStatusTimeline`**: a 4-stage visual tracker (Processing →
+   Shipped → Out for Delivery → Delivered). Since there's no courier
+   webhook/Cloud Function in this scaffold to push real status updates,
+   progress is derived from elapsed time between `createdAt` and
+   `estimatedDelivery` — clearly commented as a demo simulation to
+   delete once real status updates land.
+5. **Order History screen**: order cards (thumbnails, item count,
+   status badge, total) → tap opens Order Tracking for that order.
+6. **Saved Addresses screen** (Profile): full CRUD reusing Checkout's
+   `AddressCard` and `showAddAddressSheet` widgets — swipe-to-delete,
+   tap-to-set-default, empty state.
+7. **Profile tiles wired for real**: "Order History" → Order History
+   list, "Saved Addresses" → the new management screen. "Payment
+   Methods" and "Help Center" remain clearly-labeled stubs for now.
+8. **Order Confirmation's "View Order"** now pushes straight to that
+   order's real tracking page instead of a snackbar stub.
+
 ## Next step (awaiting your confirmation)
 
-**Wishlist** (replacing today's local-only favorite toggles with a real,
-synced-to-Firestore implementation shared across Home/Categories/Search/
-Product Details) and **Cart** (quantities, remove, coupons, tax/shipping
-calculation, save-for-later) — the two screens every "Add to Cart" /
-heart tap has been stubbed toward.
+**Notifications** (push notification handling + in-app notification
+center, wiring up Firebase Cloud Messaging) and **remaining Profile
+completion** (edit personal info, language switch, Help
+Center/FAQ/Contact Support, Privacy Policy/Terms, app version, feedback
+screen) — the last major pieces from the original feature list.

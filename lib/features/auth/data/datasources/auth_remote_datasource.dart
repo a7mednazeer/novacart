@@ -76,22 +76,22 @@ class AuthRemoteDataSource {
     try {
       final googleUser = await _googleSignIn.authenticate();
       final googleAuth = googleUser.authentication;
-      final credential = fb.GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-      );
+    final credential = fb.GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+    );
 
       final userCredential = await _auth.signInWithCredential(credential);
-      final user = userCredential.user!;
+    final user = userCredential.user!;
 
-      final docRef = _usersCollection.doc(user.uid);
-      final doc = await docRef.get();
-      final model = UserModel.fromFirebaseUser(user, firestoreData: doc.data());
+    final docRef = _usersCollection.doc(user.uid);
+    final doc = await docRef.get();
+    final model = UserModel.fromFirebaseUser(user, firestoreData: doc.data());
 
-      if (!doc.exists) {
-        await docRef.set(model.toFirestore());
-      }
+    if (!doc.exists) {
+      await docRef.set(model.toFirestore());
+    }
 
-      return model;
+    return model;
     } on fb.FirebaseAuthException {
       rethrow;
     } catch (e) {

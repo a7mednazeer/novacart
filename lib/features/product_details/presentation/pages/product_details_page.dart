@@ -10,9 +10,12 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/widgets/error_state_view.dart';
+import '../../../../core/widgets/cart_icon_button.dart';
 import '../../../../core/widgets/product_horizontal_list.dart';
 import '../../../../core/widgets/shimmer_box.dart';
+import '../../../cart/presentation/cubit/cart_cubit.dart';
 import '../../../product/domain/entities/product_entity.dart';
+import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
 import '../cubit/product_details_cubit.dart';
 import '../widgets/add_to_cart_bar.dart';
 import '../widgets/color_selector.dart';
@@ -86,11 +89,7 @@ class _ProductDetailsView extends StatelessWidget {
                           'Sharing ${product.name}…',
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.shopping_cart_outlined),
-                        onPressed: () =>
-                            AppSnackBar.showInfo(context, 'Cart — coming soon'),
-                      ),
+                      const CartIconButton(),
                     ],
                   ),
                   SliverToBoxAdapter(
@@ -110,15 +109,21 @@ class _ProductDetailsView extends StatelessWidget {
                               Positioned(
                                 top: AppSpacing.sm,
                                 right: AppSpacing.sm,
-                                child: _FavoriteButton(
-                                  isFavorite: loaded.isFavorite,
-                                  onTap: () {
-                                    context.read<ProductDetailsCubit>().toggleFavorite();
-                                    AppSnackBar.showSuccess(
-                                      context,
-                                      loaded.isFavorite
-                                          ? 'Removed from wishlist'
-                                          : 'Added to wishlist',
+                                child: BlocBuilder<WishlistCubit, WishlistState>(
+                                  builder: (context, wishlistState) {
+                                    final isFavorite =
+                                        wishlistState.ids.contains(product.id);
+                                    return _FavoriteButton(
+                                      isFavorite: isFavorite,
+                                      onTap: () {
+                                        context.read<WishlistCubit>().toggle(product.id);
+                                        AppSnackBar.showSuccess(
+                                          context,
+                                          isFavorite
+                                              ? 'Removed from wishlist'
+                                              : 'Added to wishlist',
+                                        );
+                                      },
                                     );
                                   },
                                 ),
@@ -236,9 +241,16 @@ class _ProductDetailsView extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: AppSpacing.sm),
-                            ProductHorizontalList(
-                              products: loaded.data.similarProducts,
-                              onProductTap: (p) => _navigateToProduct(context, p),
+                            BlocBuilder<WishlistCubit, WishlistState>(
+                              builder: (context, wishlistState) {
+                                return ProductHorizontalList(
+                                  products: loaded.data.similarProducts,
+                                  onProductTap: (p) => _navigateToProduct(context, p),
+                                  onFavoriteToggle: (p) =>
+                                      context.read<WishlistCubit>().toggle(p.id),
+                                  favoriteIds: wishlistState.ids,
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -259,6 +271,12 @@ class _ProductDetailsView extends StatelessWidget {
                   onDecrement: () =>
                       context.read<ProductDetailsCubit>().decrementQuantity(),
                   onAddToCart: () {
+                    context.read<CartCubit>().addItem(
+                          product,
+                          color: loaded.selectedColor,
+                          size: loaded.selectedSize,
+                          quantity: loaded.quantity,
+                        );
                     AppSnackBar.showSuccess(
                       context,
                       'Added ${loaded.quantity}× ${product.name} to cart',

@@ -24,26 +24,29 @@ class CartRemoteDataSource {
   CollectionReference<Map<String, dynamic>> _savedRef(String uid) =>
       _firestore!.collection('users').doc(uid).collection('savedForLater');
 
-  Stream<List<CartItemModel>> watchCart(String uid) {
+  Stream<List<CartItemModel>> watchCart(String uid) async* {
     if (!_isConfigured) {
       _mockCart[uid] ??= {};
-      Timer.run(() => _cartController.add(_mockCart[uid]!.values.toList()));
-      return _cartController.stream;
+      // Yield current state immediately so the Cubit doesn't hang in loading
+      yield _mockCart[uid]!.values.toList();
+      yield* _cartController.stream;
+      return;
     }
     
-    return _cartRef(uid).snapshots().map((snapshot) => snapshot.docs
+    yield* _cartRef(uid).snapshots().map((snapshot) => snapshot.docs
         .map((doc) => CartItemModel.fromFirestore(doc.id, doc.data()))
         .toList());
   }
 
-  Stream<List<CartItemModel>> watchSavedForLater(String uid) {
+  Stream<List<CartItemModel>> watchSavedForLater(String uid) async* {
     if (!_isConfigured) {
       _mockSaved[uid] ??= {};
-      Timer.run(() => _savedController.add(_mockSaved[uid]!.values.toList()));
-      return _savedController.stream;
+      yield _mockSaved[uid]!.values.toList();
+      yield* _savedController.stream;
+      return;
     }
     
-    return _savedRef(uid).snapshots().map((snapshot) => snapshot.docs
+    yield* _savedRef(uid).snapshots().map((snapshot) => snapshot.docs
         .map((doc) => CartItemModel.fromFirestore(doc.id, doc.data()))
         .toList());
   }

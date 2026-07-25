@@ -19,16 +19,16 @@ class WishlistRemoteDataSource {
   CollectionReference<Map<String, dynamic>> _wishlistRef(String uid) =>
       _firestore!.collection('users').doc(uid).collection('wishlist');
 
-  Stream<Set<String>> watchWishlistIds(String uid) {
+  Stream<Set<String>> watchWishlistIds(String uid) async* {
     if (!_isConfigured) {
-      // In mock mode, initialize with empty if not present and emit
       _mockWishlist[uid] ??= {};
-      // Emit current value immediately AND on every subsequent change
-      Timer.run(() => _mockStreamController.add(_mockWishlist[uid]!));
-      return _mockStreamController.stream;
+      // Yield current value immediately so the Cubit doesn't hang in loading
+      yield Set.from(_mockWishlist[uid]!);
+      yield* _mockStreamController.stream;
+      return;
     }
     
-    return _wishlistRef(uid)
+    yield* _wishlistRef(uid)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => doc.id).toSet());
   }

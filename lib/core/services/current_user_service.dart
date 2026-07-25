@@ -15,6 +15,6 @@ class CurrentUserService {
   /// is not initialized/configured.
   String? get uid {
     if (_auth == null) return 'mock-uid-123';
-    return _auth!.currentUser?.uid;
+    return _auth.currentUser?.uid;
   }
 }

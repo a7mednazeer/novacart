@@ -22,16 +22,17 @@ class AddressRemoteDataSource {
   CollectionReference<Map<String, dynamic>> _addressesRef(String uid) =>
       _firestore!.collection('users').doc(uid).collection('addresses');
 
-  Stream<List<AddressModel>> watchAddresses(String uid) {
+  Stream<List<AddressModel>> watchAddresses(String uid) async* {
     if (!_isConfigured) {
       _mockAddresses[uid] ??= {};
       final controller = _getController(uid);
-      // Emit current state immediately to the new listener
-      Timer.run(() => controller.add(_mockAddresses[uid]!.values.toList()));
-      return controller.stream;
+      // Yield current state immediately so the consumer doesn't hang
+      yield _mockAddresses[uid]!.values.toList();
+      yield* controller.stream;
+      return;
     }
     
-    return _addressesRef(uid).snapshots().map((snapshot) => snapshot.docs
+    yield* _addressesRef(uid).snapshots().map((snapshot) => snapshot.docs
         .map((doc) => AddressModel.fromFirestore(doc.id, doc.data()))
         .toList());
   }
@@ -41,6 +42,7 @@ class AddressRemoteDataSource {
       final id = DateTime.now().millisecondsSinceEpoch.toString();
       _mockAddresses[uid] ??= {};
       
+      // If this is the first address, make it default
       final isFirst = _mockAddresses[uid]!.isEmpty;
       final newAddress = AddressModel(
         id: id,
@@ -52,6 +54,7 @@ class AddressRemoteDataSource {
       );
 
       if (newAddress.isDefault) {
+        // Unset other defaults
         _mockAddresses[uid]!.forEach((key, value) {
           _mockAddresses[uid]![key] = value.copyWith(isDefault: false);
         });

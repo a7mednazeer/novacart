@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "960344135307",
+    "project_id": "novacart-4a87d",
+    "storage_bucket": "novacart-4a87d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960344135307:android:b2a13d47e8aef1da83e68e",
+        "android_client_info": {
+          "package_name": "com.example.novacart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDj6zwDlOVhBbDBY8g2jNUK3sdFrR2YUWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

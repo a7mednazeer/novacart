@@ -76,22 +76,22 @@ class AuthRemoteDataSource {
     try {
       final googleUser = await _googleSignIn.authenticate();
       final googleAuth = googleUser.authentication;
-    final credential = fb.GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken,
-    );
+      final credential = fb.GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
 
       final userCredential = await _auth.signInWithCredential(credential);
-    final user = userCredential.user!;
+      final user = userCredential.user!;
 
-    final docRef = _usersCollection.doc(user.uid);
-    final doc = await docRef.get();
-    final model = UserModel.fromFirebaseUser(user, firestoreData: doc.data());
+      final docRef = _usersCollection.doc(user.uid);
+      final doc = await docRef.get();
+      final model = UserModel.fromFirebaseUser(user, firestoreData: doc.data());
 
-    if (!doc.exists) {
-      await docRef.set(model.toFirestore());
-    }
+      if (!doc.exists) {
+        await docRef.set(model.toFirestore());
+      }
 
-    return model;
+      return model;
     } on fb.FirebaseAuthException {
       rethrow;
     } catch (e) {
@@ -126,6 +126,28 @@ class AuthRemoteDataSource {
     if (!_isConfigured) return null;
     final user = _firebaseAuth?.currentUser;
     if (user == null) return null;
+    final doc = await _usersCollection.doc(user.uid).get();
+    return UserModel.fromFirebaseUser(user, firestoreData: doc.data());
+  }
+
+  Future<UserModel> updateProfile({
+    required String fullName,
+    String? phoneNumber,
+  }) async {
+    final user = _firebaseAuth?.currentUser;
+    if (user == null) {
+      throw fb.FirebaseAuthException(
+        code: 'no-current-user',
+        message: 'You need to be signed in to update your profile.',
+      );
+    }
+
+    await user.updateDisplayName(fullName);
+    await _usersCollection.doc(user.uid).set({
+      'fullName': fullName,
+      if (phoneNumber != null) 'phoneNumber': phoneNumber,
+    }, SetOptions(merge: true));
+
     final doc = await _usersCollection.doc(user.uid).get();
     return UserModel.fromFirebaseUser(user, firestoreData: doc.data());
   }

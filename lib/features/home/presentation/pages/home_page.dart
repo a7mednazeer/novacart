@@ -10,7 +10,10 @@ import '../../../../core/routing/app_routes.dart';
 import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/widgets/error_state_view.dart';
 import '../../../../core/widgets/cart_icon_button.dart';
+import '../../../../core/widgets/notification_icon_button.dart';
+import '../../../../core/services/push_notification_service.dart';
 import '../../../cart/presentation/cubit/cart_cubit.dart';
+import '../../../notifications/presentation/cubit/notifications_cubit.dart';
 import '../../../product/domain/entities/category_entity.dart';
 import '../../../product/domain/entities/product_entity.dart';
 import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
@@ -46,10 +49,12 @@ class _HomeViewState extends State<_HomeView> {
   void initState() {
     super.initState();
     // Home is the first screen reached after a successful sign-in, so
-    // this is where the app-wide Wishlist/Cart Firestore subscriptions
-    // start. Both calls are idempotent — safe even if already started.
+    // this is where all app-wide Firestore subscriptions start. Every
+    // call here is idempotent — safe even if already started.
     sl<WishlistCubit>().ensureStarted();
     sl<CartCubit>().ensureStarted();
+    sl<NotificationsCubit>().ensureStarted();
+    sl<PushNotificationService>().saveTokenForCurrentUser();
   }
 
   void _toggleFavorite(ProductEntity product) {
@@ -186,11 +191,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.notifications_none_rounded),
-          onPressed: () =>
-              AppSnackBar.showInfo(context, 'Notifications — coming soon'),
-        ),
+        const NotificationIconButton(),
         const CartIconButton(),
         const SizedBox(width: AppSpacing.xs),
       ],

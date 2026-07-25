@@ -51,6 +51,16 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, UserEntity?>> getCurrentUser() =>
       _guard(() => _remoteDataSource.getCurrentUser());
 
+  @override
+  Future<Either<Failure, UserEntity>> updateProfile({
+    required String fullName,
+    String? phoneNumber,
+  }) =>
+      _guard(() => _remoteDataSource.updateProfile(
+            fullName: fullName,
+            phoneNumber: phoneNumber,
+          ));
+
   /// Runs [action], catching Firebase and generic exceptions and
   /// converting them into an `Either<Failure, T>` so nothing above the
   /// data layer ever has to deal with a thrown exception directly.

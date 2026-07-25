@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart' as google;
 import '../network/dio_client.dart';
 import '../services/local_storage_service.dart';
 import '../theme/theme_cubit.dart';
+import '../theme/language_cubit.dart';
 import '../../features/splash/presentation/cubit/splash_cubit.dart';
 import '../../features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
@@ -17,9 +18,13 @@ import '../../features/auth/domain/usecases/google_sign_in_usecase.dart';
 import '../../features/auth/domain/usecases/sign_in_usecase.dart';
 import '../../features/auth/domain/usecases/sign_out_usecase.dart';
 import '../../features/auth/domain/usecases/sign_up_usecase.dart';
-import 'package:novacart/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:novacart/features/product/data/datasources/product_remote_datasource.dart';
-import 'package:novacart/features/home/data/repositories/home_repository_impl.dart';
+import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
+import '../../features/auth/domain/usecases/update_profile_usecase.dart';
+import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/profile/data/feedback_service.dart';
+import '../../features/profile/presentation/cubit/edit_profile_cubit.dart';
+import '../../features/product/data/datasources/product_remote_datasource.dart';
+import '../../features/home/data/repositories/home_repository_impl.dart';
 import '../../features/home/domain/repositories/home_repository.dart';
 import '../../features/home/domain/usecases/get_home_data_usecase.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
@@ -68,6 +73,11 @@ import '../../features/checkout/presentation/cubit/address_management_cubit.dart
 import '../../features/checkout/presentation/cubit/checkout_cubit.dart';
 import '../../features/orders/presentation/cubit/order_details_cubit.dart';
 import '../../features/orders/presentation/cubit/order_history_cubit.dart';
+import "../../features/notifications/data/datasources/notification_remote_datasource.dart";
+import '../../features/notifications/data/repositories/notification_repository_impl.dart';
+import '../../features/notifications/domain/repositories/notification_repository.dart';
+import '../../features/notifications/presentation/cubit/notifications_cubit.dart';
+import '../services/push_notification_service.dart';
 
 /// Global Service Locator.
 ///
@@ -104,6 +114,7 @@ Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   // App-wide Cubits (single instance shared across the whole widget tree)
   // ---------------------------------------------------------------------
   sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit(sl()));
+  sl.registerLazySingleton<LanguageCubit>(() => LanguageCubit(sl()));
 
   // ---------------------------------------------------------------------
   // Feature: Splash
@@ -139,6 +150,8 @@ Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   sl.registerLazySingleton(() => ForgotPasswordUseCase(sl()));
   sl.registerLazySingleton(() => GoogleSignInUseCase(sl()));
   sl.registerLazySingleton(() => SignOutUseCase(sl()));
+  sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateProfileUseCase(sl()));
 
   // Factory: each screen (Sign In / Sign Up / Forgot Password / Home
   // logout button) gets its own fresh AuthCubit instance.
@@ -289,5 +302,33 @@ Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   // cubit instance scoped to one order id.
   sl.registerFactoryParam<OrderDetailsCubit, String, void>(
     (orderId, _) => OrderDetailsCubit(sl(), sl(), orderId),
+  );
+
+  // ---------------------------------------------------------------------
+  // Feature: Notifications (app-wide singleton, same pattern as Wishlist/Cart)
+  // ---------------------------------------------------------------------
+  sl.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSource(sl()),
+  );
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<NotificationsCubit>(
+    () => NotificationsCubit(sl(), sl(), sl()),
+  );
+
+  // Depends on NotificationsCubit, so registered after it above.
+  sl.registerLazySingleton<PushNotificationService>(
+    () => PushNotificationService(sl(), sl(), sl()),
+  );
+
+  // ---------------------------------------------------------------------
+  // Feature: Profile (Edit Profile + Feedback)
+  // ---------------------------------------------------------------------
+  sl.registerFactory<EditProfileCubit>(
+    () => EditProfileCubit(sl(), sl()),
+  );
+  sl.registerLazySingleton<FeedbackService>(
+    () => FeedbackService(sl(), sl()),
   );
 }

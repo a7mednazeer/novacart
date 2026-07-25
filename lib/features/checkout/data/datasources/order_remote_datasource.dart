@@ -51,15 +51,17 @@ class OrderRemoteDataSource {
     return ref.id;
   }
 
-  Stream<List<OrderModel>> watchOrders(String uid) {
+  Stream<List<OrderModel>> watchOrders(String uid) async* {
     if (!_isConfigured) {
       _mockOrders[uid] ??= [];
       final controller = _getController(uid);
-      Timer.run(() => controller.add(_mockOrders[uid]!));
-      return controller.stream;
+      // Yield current state immediately so history doesn't hang in loading
+      yield _mockOrders[uid]!;
+      yield* controller.stream;
+      return;
     }
 
-    return _ordersRef(uid)
+    yield* _ordersRef(uid)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs

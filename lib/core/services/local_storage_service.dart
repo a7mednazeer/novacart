@@ -74,6 +74,15 @@ class LocalStorageService {
       _prefs.remove(StorageKeys.recentSearches);
 
   // ---------------------------------------------------------------------
+  // First-run demo seeding flags
+  // ---------------------------------------------------------------------
+  bool get hasSeededNotifications =>
+      _prefs.getBool(StorageKeys.hasSeededNotifications) ?? false;
+
+  Future<void> setHasSeededNotifications(bool value) =>
+      _prefs.setBool(StorageKeys.hasSeededNotifications, value);
+
+  // ---------------------------------------------------------------------
   // Sensitive data (→ SecureStorage)
   // ---------------------------------------------------------------------
   Future<String?> get authToken =>

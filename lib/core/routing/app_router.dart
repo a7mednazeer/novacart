@@ -11,12 +11,13 @@ import '../../features/checkout/domain/entities/order_entity.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/checkout/presentation/pages/order_confirmation_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/orders/presentation/pages/order_history_page.dart';
 import '../../features/orders/presentation/pages/order_tracking_page.dart';
 import '../../features/product_details/presentation/pages/product_details_page.dart';
 import '../../features/profile/presentation/pages/manage_addresses_page.dart';
-import '../../features/profile/presentation/pages/profile_placeholder_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/wishlist/presentation/pages/wishlist_page.dart';
@@ -100,7 +101,7 @@ abstract class AppRouter {
             GoRoute(
               path: AppRoutes.profile,
               name: AppRoutes.profile,
-              builder: (context, state) => const ProfilePlaceholderPage(),
+              builder: (context, state) => const ProfilePage(),
             ),
           ]),
         ],
@@ -172,9 +173,15 @@ abstract class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const ManageAddressesPage(),
       ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: AppRoutes.notifications,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const NotificationsPage(),
+      ),
 
       // Upcoming top-level routes (pushed on top of the shell, added as
-      // each screen is built): AppRoutes.notifications, ...
+      // each screen is built): help center, legal pages, feedback, ...
     ],
     errorBuilder: (context, state) => Scaffold(
       body: Center(

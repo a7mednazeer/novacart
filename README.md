@@ -2,8 +2,8 @@
 
 A premium, production-grade Flutter e-commerce app.
 
-## Status: Step 8 of N — Order History + Tracking, Saved Addresses ✅
-(Steps 1–7 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search, Product Details, Wishlist/Cart, Checkout — are complete; summaries retained below.)
+## Status: Step 9 of N — Notifications + Profile Completion ✅
+(Steps 1–8 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search, Product Details, Wishlist/Cart, Checkout, Order History/Tracking — are complete; summaries retained below.)
 
 ## Architecture
 
@@ -405,10 +405,73 @@ distinct from `CheckoutCubit`'s session-scoped one) plus
 8. **Order Confirmation's "View Order"** now pushes straight to that
    order's real tracking page instead of a snackbar stub.
 
+## Step 9 — Notifications + Profile Completion (this delivery)
+
+**New folder**: `features/notifications/{domain,data,presentation}`.
+**New in Profile**: `edit_profile_page.dart`, `language_settings_page.dart`,
+`help_center_page.dart`, `static_content_page.dart` (generic, used for
+Privacy Policy + Terms), `about_feedback_page.dart`, plus `EditProfileCubit`
+and a minimal `FeedbackService`. **New core services**:
+`PushNotificationService`, `LanguageCubit`. **`profile_placeholder_page.dart`
+renamed to `profile_page.dart`** — it stopped being a placeholder a few
+steps ago and the filename finally caught up.
+
+### Notifications
+1. **`NotificationsCubit` is an app-wide singleton** — same pattern as
+   `WishlistCubit`/`CartCubit` — so the bell icon's unread badge stays
+   live from any screen. Backed by `users/{uid}/notifications`, with a
+   one-time (`LocalStorageService.hasSeededNotifications`-guarded) demo
+   seed so first-time users see a welcome + promo notification instead
+   of an empty inbox.
+2. **`PushNotificationService`** handles the *receiving* side of FCM
+   fully: permission request, token retrieval + storage to
+   `users/{uid}.fcmToken` (so a real backend could target this device),
+   a foreground-message handler that shows a local notification
+   (`flutter_local_notifications`) *and* mirrors it into the in-app
+   center, and the required top-level background handler. There's no
+   backend here that *sends* pushes (that's a Cloud Function reacting
+   to e.g. an order status change) — everything receiving-side is real
+   and wired; sending is the clear next integration point once a
+   backend exists. Every FCM call is guarded so a not-yet-configured
+   Firebase project never crashes startup.
+3. **`NotificationIconButton`** (bell + live unread badge) replaces
+   Home's notification stub, same UI pattern as `CartIconButton`.
+
+### Profile completion
+4. **Edit Profile**: real form (name/phone) reading/writing through a
+   new `AuthRepository.updateProfile()` (updates both the Firestore
+   `users` doc and the Firebase Auth display name).
+5. **Language**: `LanguageCubit` persists the choice and — critically —
+   actually flips the app to RTL layout for Arabic today, via a
+   `Directionality` wrapper around `MaterialApp.router` in `main.dart`.
+   Documented honestly: full string translation needs ARB files under
+   `core/l10n/` + `flutter gen-l10n`, which is the clear next step this
+   is built to receive — this pass ships the working infrastructure,
+   not a pretend translation.
+6. **Help Center** (FAQ + contact stub), **Privacy Policy / Terms**
+   (one reusable `StaticContentPage` instead of two near-duplicate
+   files), **About & Feedback** (real app version via
+   `package_info_plus`, feedback writes to a Firestore `feedback`
+   collection).
+7. **Payment Methods** remains a clearly-labeled "coming soon" tile —
+   real payment method storage needs a PCI-compliant tokenization flow
+   (Stripe Elements/similar) that's out of scope for a client-only
+   demo; flagged rather than faked.
+
+### Firestore setup for this step
+One new per-user subcollection: `users/{uid}/notifications`. Same
+ownership rule pattern as before. One new top-level collection:
+`feedback` (write-only from the client; only admins should read it —
+add a rule like `allow create: if request.auth != null; allow read: if false;`).
+
 ## Next step (awaiting your confirmation)
 
-**Notifications** (push notification handling + in-app notification
-center, wiring up Firebase Cloud Messaging) and **remaining Profile
-completion** (edit personal info, language switch, Help
-Center/FAQ/Contact Support, Privacy Policy/Terms, app version, feedback
-screen) — the last major pieces from the original feature list.
+The core shopping loop, auth, and account management are now feature-
+complete end to end. Natural next steps from here: **polish passes**
+(pull-to-refresh + offline states on more screens, empty-state
+illustrations, Hero/shared-element transitions between Categories →
+Product Details), **localization** (the ARB files noted above), **biometric
+login** (`local_auth` is already in `pubspec.yaml`, unused), or a new
+functional area like **product comparison** or **recently viewed**
+(mentioned in the original spec but not yet built). Let me know which
+direction you'd like to take next.

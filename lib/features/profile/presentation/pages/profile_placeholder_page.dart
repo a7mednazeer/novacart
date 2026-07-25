@@ -79,7 +79,7 @@ class ProfilePlaceholderPage extends StatelessWidget {
                 builder: (context, mode) {
                   return SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    activeColor: AppColors.primary,
+                    activeThumbColor: AppColors.primary,
                     title: Text(
                       'Dark Mode',
                       style: AppTextStyles.bodyLarge(

@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart' as google;
 
@@ -23,6 +24,11 @@ import '../../features/auth/domain/usecases/update_profile_usecase.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 import '../../features/profile/data/feedback_service.dart';
 import '../../features/profile/presentation/cubit/edit_profile_cubit.dart';
+import '../../features/recently_viewed/data/datasources/recently_viewed_remote_datasource.dart';
+import '../../features/recently_viewed/data/repositories/recently_viewed_repository_impl.dart';
+import '../../features/recently_viewed/domain/repositories/recently_viewed_repository.dart';
+import '../../features/recently_viewed/domain/usecases/record_product_view_usecase.dart';
+import '../../features/recently_viewed/presentation/cubit/recently_viewed_cubit.dart';
 import '../../features/product/data/datasources/product_remote_datasource.dart';
 import '../../features/home/data/repositories/home_repository_impl.dart';
 import '../../features/home/domain/repositories/home_repository.dart';
@@ -41,6 +47,7 @@ import '../../features/product_details/domain/repositories/product_details_repos
 import '../../features/product_details/domain/usecases/get_product_details_usecase.dart';
 import '../../features/product_details/presentation/cubit/product_details_cubit.dart';
 import '../services/current_user_service.dart';
+import '../services/biometric_auth_service.dart';
 import '../../features/product/data/repositories/product_catalog_repository_impl.dart';
 import '../../features/product/domain/repositories/product_catalog_repository.dart';
 import '../../features/product/domain/usecases/get_products_by_ids_usecase.dart';
@@ -73,7 +80,7 @@ import '../../features/checkout/presentation/cubit/address_management_cubit.dart
 import '../../features/checkout/presentation/cubit/checkout_cubit.dart';
 import '../../features/orders/presentation/cubit/order_details_cubit.dart';
 import '../../features/orders/presentation/cubit/order_history_cubit.dart';
-import "../../features/notifications/data/datasources/notification_remote_datasource.dart";
+import '../../features/notifications/data/datasources/notification_remote_datasource.dart';
 import '../../features/notifications/data/repositories/notification_repository_impl.dart';
 import '../../features/notifications/domain/repositories/notification_repository.dart';
 import '../../features/notifications/presentation/cubit/notifications_cubit.dart';
@@ -109,6 +116,7 @@ Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   sl.registerLazySingleton<CurrentUserService>(
     () => CurrentUserService(firebaseInitialized ? sl<FirebaseAuth>() : null),
   );
+  sl.registerLazySingleton<BiometricAuthService>(() => BiometricAuthService());
 
   // ---------------------------------------------------------------------
   // App-wide Cubits (single instance shared across the whole widget tree)
@@ -330,5 +338,19 @@ Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   );
   sl.registerLazySingleton<FeedbackService>(
     () => FeedbackService(sl(), sl()),
+  );
+
+  // ---------------------------------------------------------------------
+  // Feature: Recently Viewed (app-wide singleton, same pattern as Wishlist)
+  // ---------------------------------------------------------------------
+  sl.registerLazySingleton<RecentlyViewedRemoteDataSource>(
+    () => RecentlyViewedRemoteDataSource(sl()),
+  );
+  sl.registerLazySingleton<RecentlyViewedRepository>(
+    () => RecentlyViewedRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => RecordProductViewUseCase(sl()));
+  sl.registerLazySingleton<RecentlyViewedCubit>(
+    () => RecentlyViewedCubit(sl(), sl(), sl(), sl()),
   );
 }

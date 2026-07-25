@@ -23,6 +23,7 @@ class ProductImageGallery extends StatefulWidget {
 
 class _ProductImageGalleryState extends State<ProductImageGallery> {
   final PageController _controller = PageController();
+  int _currentPage = 0;
 
   @override
   void dispose() {
@@ -52,6 +53,7 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
           child: PageView.builder(
             controller: _controller,
             itemCount: images.length,
+            onPageChanged: (i) => setState(() => _currentPage = i),
             itemBuilder: (context, index) {
               final image = images[index];
               final child = image.isEmpty

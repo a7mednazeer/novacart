@@ -13,6 +13,7 @@ import 'core/theme/language_cubit.dart';
 import 'core/theme/theme_cubit.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
 import 'features/notifications/presentation/cubit/notifications_cubit.dart';
+import 'features/recently_viewed/presentation/cubit/recently_viewed_cubit.dart';
 import 'features/wishlist/presentation/cubit/wishlist_cubit.dart';
 
 Future<void> main() async {
@@ -27,7 +28,7 @@ Future<void> main() async {
     await Firebase.initializeApp().timeout(const Duration(seconds: 3));
     if (Firebase.apps.isNotEmpty) {
       firebaseInitialized = true;
-      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     }
   } catch (e) {
     debugPrint('Firebase init timed out or failed: $e');
@@ -67,6 +68,7 @@ class NovaCartApp extends StatelessWidget {
           value: sl<CartCubit>()..ensureStarted(),
         ),
         BlocProvider<NotificationsCubit>.value(value: sl<NotificationsCubit>()),
+        BlocProvider<RecentlyViewedCubit>.value(value: sl<RecentlyViewedCubit>()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
@@ -85,6 +87,9 @@ class NovaCartApp extends StatelessWidget {
                   GlobalWidgetsLocalizations.delegate,
                   GlobalCupertinoLocalizations.delegate,
                 ],
+                // Guarantees RTL layout mirroring for Arabic even before
+                // full string translation (ARB files) is added — see
+                // the note in `LanguageCubit`.
                 builder: (context, child) => Directionality(
                   textDirection:
                       locale.languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr,

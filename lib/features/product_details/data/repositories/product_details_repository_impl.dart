@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:novacart/core/errors/failures.dart';
-import 'package:novacart/features/product/data/datasources/product_remote_datasource.dart';
-import 'package:novacart/features/product_details/domain/entities/product_details_data.dart';
-import 'package:novacart/features/product_details/domain/repositories/product_details_repository.dart';
-import 'package:novacart/features/product_details/data/datasources/review_mock_data.dart';
+import '../../../../core/errors/failures.dart';
+import '../../../product/data/datasources/product_remote_datasource.dart';
+import '../../domain/entities/product_details_data.dart';
+import '../../domain/repositories/product_details_repository.dart';
+import '../datasources/review_mock_data.dart';
 
 class ProductDetailsRepositoryImpl implements ProductDetailsRepository {
   ProductDetailsRepositoryImpl(this._dataSource);

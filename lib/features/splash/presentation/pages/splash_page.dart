@@ -3,17 +3,22 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-// import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/routing/app_routes.dart';
+import '../../../../core/services/biometric_auth_service.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/gradient_scaffold_background.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../cubit/splash_cubit.dart';
 
 /// The very first screen a user sees. Shows the NovaCart brand mark
 /// with an elegant entrance animation while [SplashCubit] resolves
-/// whether to route to Onboarding, Sign In, or Home.
+/// whether to route to Onboarding, Sign In, or Home — and, if the user
+/// has enabled biometric login, gates Home behind a Face ID/Touch ID
+/// prompt first.
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
 
@@ -21,9 +26,9 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<SplashCubit>()..checkInitialRoute(),
-      child: BlocListener<SplashCubit, SplashState>(
+      child: BlocConsumer<SplashCubit, SplashState>(
         listener: (context, state) {
-          if (state is SplashReady) {
+          if (state is SplashReady && !state.requiresBiometric) {
             switch (state.destination) {
               case SplashDestination.onboarding:
                 context.go(AppRoutes.onboarding);
@@ -41,7 +46,114 @@ class SplashPage extends StatelessWidget {
             );
           }
         },
-        child: const _SplashView(),
+        builder: (context, state) {
+          if (state is SplashReady && state.requiresBiometric) {
+            return const _BiometricLockView();
+          }
+          return const _SplashView();
+        },
+      ),
+    );
+  }
+}
+
+/// Shown instead of auto-navigating to Home when biometric login is
+/// enabled. Prompts immediately on first build; offers a retry and a
+/// "Sign in with password instead" fallback (which signs out of the
+/// live Firebase session and returns to Sign In) in case biometrics
+/// fail or aren't available right now.
+class _BiometricLockView extends StatefulWidget {
+  const _BiometricLockView();
+
+  @override
+  State<_BiometricLockView> createState() => _BiometricLockViewState();
+}
+
+class _BiometricLockViewState extends State<_BiometricLockView> {
+  bool _isAuthenticating = false;
+  bool _lastAttemptFailed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _attemptUnlock());
+  }
+
+  Future<void> _attemptUnlock() async {
+    setState(() {
+      _isAuthenticating = true;
+      _lastAttemptFailed = false;
+    });
+
+    final success = await sl<BiometricAuthService>().authenticate(
+      reason: 'Unlock NovaCart',
+    );
+
+    if (!mounted) return;
+    setState(() => _isAuthenticating = false);
+
+    if (success) {
+      context.go(AppRoutes.home);
+    } else {
+      setState(() => _lastAttemptFailed = true);
+    }
+  }
+
+  Future<void> _signInWithPasswordInstead() async {
+    await sl<AuthCubit>().signOut();
+    if (mounted) context.go(AppRoutes.signIn);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GradientScaffoldBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              children: [
+                const Spacer(flex: 3),
+                const AppLogo(size: 72),
+                const Spacer(flex: 1),
+                Icon(
+                  Icons.fingerprint_rounded,
+                  size: 72,
+                  color: Colors.white.withValues(alpha: _isAuthenticating ? 1 : 0.85),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  _isAuthenticating
+                      ? 'Waiting for authentication…'
+                      : _lastAttemptFailed
+                          ? "Couldn't verify it's you"
+                          : 'Unlock NovaCart',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.h2(color: Colors.white),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Use Face ID, Touch ID, or your device PIN to continue.',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium(
+                    color: Colors.white.withValues(alpha: 0.85),
+                  ),
+                ),
+                const Spacer(flex: 2),
+                if (_lastAttemptFailed && !_isAuthenticating) ...[
+                  AppButton(label: 'Try Again', onPressed: _attemptUnlock),
+                  const SizedBox(height: 12),
+                ],
+                AppButton(
+                  label: 'Sign in with password instead',
+                  variant: AppButtonVariant.text,
+                  onPressed: _isAuthenticating ? null : _signInWithPasswordInstead,
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -57,9 +169,9 @@ class _SplashView extends StatelessWidget {
         child: SafeArea(
           child: SizedBox(
             width: double.infinity,
-            child: Column(
+          child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+            children: [
               const Spacer(flex: 3),
               const AppLogo(size: 96)
                   .animate()
@@ -89,8 +201,8 @@ class _SplashView extends StatelessWidget {
               const SizedBox(height: 32),
             ],
           ),
+          ),
         ),
-      ),
       ),
     );
   }

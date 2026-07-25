@@ -15,6 +15,7 @@ import '../../../../core/widgets/product_horizontal_list.dart';
 import '../../../../core/widgets/shimmer_box.dart';
 import '../../../cart/presentation/cubit/cart_cubit.dart';
 import '../../../product/domain/entities/product_entity.dart';
+import '../../../recently_viewed/presentation/cubit/recently_viewed_cubit.dart';
 import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
 import '../cubit/product_details_cubit.dart';
 import '../widgets/add_to_cart_bar.dart';
@@ -32,7 +33,12 @@ class ProductDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<ProductDetailsCubit>()..load(productId),
+      create: (_) {
+        // Fire-and-forget: recording a view doesn't need to block or
+        // react to Product Details' own load state.
+        sl<RecentlyViewedCubit>().recordView(productId);
+        return sl<ProductDetailsCubit>()..load(productId);
+      },
       child: _ProductDetailsView(productId: productId),
     );
   }

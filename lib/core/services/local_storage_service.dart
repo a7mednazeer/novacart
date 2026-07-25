@@ -83,6 +83,15 @@ class LocalStorageService {
       _prefs.setBool(StorageKeys.hasSeededNotifications, value);
 
   // ---------------------------------------------------------------------
+  // Security preferences
+  // ---------------------------------------------------------------------
+  bool get biometricEnabled =>
+      _prefs.getBool(StorageKeys.biometricEnabled) ?? false;
+
+  Future<void> setBiometricEnabled(bool value) =>
+      _prefs.setBool(StorageKeys.biometricEnabled, value);
+
+  // ---------------------------------------------------------------------
   // Sensitive data (→ SecureStorage)
   // ---------------------------------------------------------------------
   Future<String?> get authToken =>

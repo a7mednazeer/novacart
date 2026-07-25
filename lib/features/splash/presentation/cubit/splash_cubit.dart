@@ -29,11 +29,13 @@ class SplashCubit extends Cubit<SplashState> {
     try {
       final results = await Future.wait([
         _resolveDestination(),
-        Future.delayed(AppDurations.slow), // Reduced for better UX during dev
+        Future.delayed(AppDurations.splash),
       ]);
 
       final destination = results.first as SplashDestination;
-      emit(SplashReady(destination));
+      final requiresBiometric =
+          destination == SplashDestination.home && _localStorage.biometricEnabled;
+      emit(SplashReady(destination, requiresBiometric: requiresBiometric));
     } catch (e) {
       emit(SplashError(e.toString()));
     }
@@ -47,8 +49,8 @@ class SplashCubit extends Cubit<SplashState> {
     if (_firebaseAuth != null) {
       try {
         final currentUser = _firebaseAuth.currentUser;
-        if (currentUser != null) {
-          return SplashDestination.home;
+    if (currentUser != null) {
+      return SplashDestination.home;
         }
       } catch (e) {
         debugPrint('Firebase check failed: $e');

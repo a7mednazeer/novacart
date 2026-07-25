@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-// import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../product/domain/entities/product_entity.dart';
 import 'countdown_timer.dart';
-import 'product_horizontal_list.dart';
+import '../../../../core/widgets/product_horizontal_list.dart';
 import 'section_header.dart';
 
 class FlashSaleSection extends StatelessWidget {

@@ -2,8 +2,8 @@
 
 A premium, production-grade Flutter e-commerce app.
 
-## Status: Step 9 of N — Notifications + Profile Completion ✅
-(Steps 1–8 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search, Product Details, Wishlist/Cart, Checkout, Order History/Tracking — are complete; summaries retained below.)
+## Status: Step 10 of N — Recently Viewed + Biometric Login ✅
+(Steps 1–9 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search, Product Details, Wishlist/Cart, Checkout, Order History/Tracking, Notifications/Profile — are complete; summaries retained below.)
 
 ## Architecture
 
@@ -464,14 +464,54 @@ ownership rule pattern as before. One new top-level collection:
 `feedback` (write-only from the client; only admins should read it —
 add a rule like `allow create: if request.auth != null; allow read: if false;`).
 
+## Step 10 — Recently Viewed + Biometric Login (this delivery)
+
+**New folder**: `features/recently_viewed/{domain,data,presentation}`.
+**New core additions**: `BiometricAuthService`, plus a `requiresBiometric`
+flag on `SplashState` and a whole new lock-screen view in `SplashPage`.
+
+1. **`RecentlyViewedCubit`** — another app-wide singleton (Wishlist/Cart
+   pattern). The one interesting wrinkle versus Wishlist: order matters
+   here (Wishlist is a `Set`, this is a `List` sorted by recency), so
+   after `GetProductsByIdsUseCase` resolves ids to products in
+   *catalog* order, the cubit re-sorts them back into *viewed* order
+   before emitting — otherwise "recently viewed" would silently mean
+   nothing. Firestore query is capped to the most recent 15
+   (`orderBy('viewedAt', descending: true).limit(15)`), one doc per
+   product id (re-viewing just bumps its timestamp rather than
+   duplicating).
+2. **Product Details records a view** the moment its `BlocProvider` is
+   created — fire-and-forget, decoupled from whether the product data
+   itself loads successfully.
+3. **Home gets a new "Recently Viewed" section** (only rendered once
+   there's at least one item — no empty section clutter), reusing the
+   same `ProductHorizontalList` and favorite-toggle wiring as every
+   other Home section.
+4. **`BiometricAuthService`** wraps `local_auth`: checks device support,
+   runs one authentication prompt (falls back to device PIN/pattern,
+   not biometric-only, so a user isn't locked out if Face ID briefly
+   fails). Enabling the toggle in Profile requires one successful
+   authentication up front — you can't turn on a security gate you
+   can't yourself pass.
+5. **Splash now has a real lock screen**: if biometric login is
+   enabled *and* the user has a live Firebase session, `SplashCubit`
+   emits `requiresBiometric: true` instead of auto-navigating to Home.
+   `SplashPage` shows a fingerprint prompt (auto-triggered), with
+   "Try Again" on failure and a "Sign in with password instead"
+   fallback that signs out and returns to Sign In — never a dead end.
+6. **Profile's Biometric Login toggle** only renders at all if the
+   device actually supports biometrics (checked once on mount) — no
+   point showing a switch that can never work.
+
 ## Next step (awaiting your confirmation)
 
-The core shopping loop, auth, and account management are now feature-
-complete end to end. Natural next steps from here: **polish passes**
-(pull-to-refresh + offline states on more screens, empty-state
-illustrations, Hero/shared-element transitions between Categories →
-Product Details), **localization** (the ARB files noted above), **biometric
-login** (`local_auth` is already in `pubspec.yaml`, unused), or a new
-functional area like **product comparison** or **recently viewed**
-(mentioned in the original spec but not yet built). Let me know which
-direction you'd like to take next.
+The core shopping loop, auth, account management, and these two extra
+polish features are now all in place. Natural next steps from here:
+**Product Comparison** (select 2-3 products from a category grid, view
+a side-by-side spec table — mentioned in the original spec, not yet
+built), a **Customer Support chat placeholder** (Help Center's "Contact
+Support" currently just shows a snackbar), **full localization** (the
+ARB files noted in Step 9), or a **general polish pass** (more
+pull-to-refresh/offline states, empty-state illustrations, richer
+shared-element transitions). Let me know which direction you'd like to
+take next.

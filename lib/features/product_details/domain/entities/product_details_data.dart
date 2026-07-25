@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:novacart/features/product/domain/entities/product_entity.dart';
-import 'package:novacart/features/product_details/domain/entities/review_entity.dart';
+import '../../../product/domain/entities/product_entity.dart';
+import 'review_entity.dart';
 
 /// Everything the Product Details screen needs, assembled by
 /// [GetProductDetailsUseCase] in one call — mirrors the `HomeData`

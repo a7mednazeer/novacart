@@ -19,11 +19,17 @@ class SplashLoading extends SplashState {
 }
 
 class SplashReady extends SplashState {
-  const SplashReady(this.destination);
+  const SplashReady(this.destination, {this.requiresBiometric = false});
   final SplashDestination destination;
 
+  /// True when the user has biometric login enabled *and* the
+  /// destination is Home (i.e. they have a live Firebase session) —
+  /// `SplashPage` shows a Face ID/Touch ID unlock prompt before
+  /// actually navigating in that case.
+  final bool requiresBiometric;
+
   @override
-  List<Object?> get props => [destination];
+  List<Object?> get props => [destination, requiresBiometric];
 }
 
 class SplashError extends SplashState {

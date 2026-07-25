@@ -18,7 +18,7 @@ import '../widgets/add_address_sheet.dart';
 import '../widgets/address_card.dart';
 import '../widgets/checkout_step_header.dart';
 import '../widgets/payment_method_tile.dart';
-// import 'order_confirmation_page.dart';
+import 'order_confirmation_page.dart';
 
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});

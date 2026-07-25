@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:novacart/core/errors/failures.dart';
-import 'package:novacart/features/checkout/domain/entities/order_entity.dart';
-import 'package:novacart/features/checkout/domain/repositories/order_repository.dart';
-import 'package:novacart/features/checkout/data/datasources/order_remote_datasource.dart';
-import 'package:novacart/features/checkout/data/models/order_model.dart';
+import '../../../../core/errors/failures.dart';
+import '../../domain/entities/order_entity.dart';
+import '../../domain/repositories/order_repository.dart';
+import '../datasources/order_remote_datasource.dart';
+import '../models/order_model.dart';
 
 class OrderRepositoryImpl implements OrderRepository {
   OrderRepositoryImpl(this._dataSource);

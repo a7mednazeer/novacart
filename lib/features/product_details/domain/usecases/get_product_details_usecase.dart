@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:novacart/core/errors/failures.dart';
-import 'package:novacart/features/product_details/domain/entities/product_details_data.dart';
-import 'package:novacart/features/product_details/domain/repositories/product_details_repository.dart';
+import '../../../../core/errors/failures.dart';
+import '../entities/product_details_data.dart';
+import '../repositories/product_details_repository.dart';
 
 class GetProductDetailsUseCase {
   const GetProductDetailsUseCase(this._repository);

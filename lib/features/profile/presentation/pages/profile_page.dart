@@ -7,6 +7,8 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/routing/app_routes.dart';
+import '../../../../core/services/biometric_auth_service.dart';
+import '../../../../core/services/local_storage_service.dart';
 import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
@@ -106,6 +108,7 @@ class ProfilePage extends StatelessWidget {
                   MaterialPageRoute(builder: (_) => const LanguageSettingsPage()),
                 ),
               ),
+              const _BiometricLoginToggle(),
               const Divider(height: AppSpacing.xxl),
               _MenuTile(
                 icon: Icons.receipt_long_outlined,
@@ -205,6 +208,73 @@ class _MenuTile extends StatelessWidget {
       ),
       trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.textMutedLight),
       onTap: onTap,
+    );
+  }
+}
+
+/// Only rendered if the device actually supports biometrics (checked
+/// once on mount) — no point showing a toggle that can never work.
+/// Enabling requires one successful authentication up front, so the
+/// user isn't locked out of their own account by a setting they
+/// couldn't actually complete at Splash time.
+class _BiometricLoginToggle extends StatefulWidget {
+  const _BiometricLoginToggle();
+
+  @override
+  State<_BiometricLoginToggle> createState() => _BiometricLoginToggleState();
+}
+
+class _BiometricLoginToggleState extends State<_BiometricLoginToggle> {
+  bool _isSupported = false;
+  bool _isChecking = true;
+  bool _isEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSupport();
+  }
+
+  Future<void> _checkSupport() async {
+    final supported = await sl<BiometricAuthService>().isDeviceSupported();
+    if (!mounted) return;
+    setState(() {
+      _isSupported = supported;
+      _isEnabled = sl<LocalStorageService>().biometricEnabled;
+      _isChecking = false;
+    });
+  }
+
+  Future<void> _onToggle(bool value) async {
+    if (value) {
+      final confirmed = await sl<BiometricAuthService>().authenticate(
+        reason: 'Confirm to enable biometric login',
+      );
+      if (!confirmed) return;
+    }
+
+    await sl<LocalStorageService>().setBiometricEnabled(value);
+    if (mounted) setState(() => _isEnabled = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isChecking || !_isSupported) return const SizedBox.shrink();
+
+    return SwitchListTile(
+      contentPadding: EdgeInsets.zero,
+      activeThumbColor: AppColors.primary,
+      title: Text(
+        'Biometric Login',
+        style: AppTextStyles.bodyLarge(color: Theme.of(context).colorScheme.onSurface),
+      ),
+      subtitle: Text(
+        'Require Face ID / Touch ID to open the app',
+        style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
+      ),
+      secondary: const Icon(Icons.fingerprint_rounded),
+      value: _isEnabled,
+      onChanged: _onToggle,
     );
   }
 }

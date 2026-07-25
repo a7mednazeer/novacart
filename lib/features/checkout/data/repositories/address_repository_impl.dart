@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:novacart/core/errors/failures.dart';
-import 'package:novacart/features/checkout/domain/entities/address_entity.dart';
-import 'package:novacart/features/checkout/domain/repositories/address_repository.dart';
-import 'package:novacart/features/checkout/data/datasources/address_remote_datasource.dart';
-import 'package:novacart/features/checkout/data/models/address_model.dart';
+import '../../../../core/errors/failures.dart';
+import '../../domain/entities/address_entity.dart';
+import '../../domain/repositories/address_repository.dart';
+import '../datasources/address_remote_datasource.dart';
+import '../models/address_model.dart';
 
 class AddressRepositoryImpl implements AddressRepository {
   AddressRepositoryImpl(this._dataSource);

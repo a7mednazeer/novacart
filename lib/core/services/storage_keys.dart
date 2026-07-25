@@ -12,4 +12,5 @@ abstract class StorageKeys {
   static const String cachedUserId = 'cached_user_id';
   static const String recentSearches = 'recent_searches';
   static const String hasSeededNotifications = 'has_seeded_notifications';
+  static const String biometricEnabled = 'biometric_enabled';
 }

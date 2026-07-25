@@ -16,6 +16,7 @@ import '../../../cart/presentation/cubit/cart_cubit.dart';
 import '../../../notifications/presentation/cubit/notifications_cubit.dart';
 import '../../../product/domain/entities/category_entity.dart';
 import '../../../product/domain/entities/product_entity.dart';
+import '../../../recently_viewed/presentation/cubit/recently_viewed_cubit.dart';
 import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
 import '../cubit/home_cubit.dart';
 import '../widgets/category_quick_list.dart';
@@ -55,6 +56,7 @@ class _HomeViewState extends State<_HomeView> {
     sl<CartCubit>().ensureStarted();
     sl<NotificationsCubit>().ensureStarted();
     sl<PushNotificationService>().saveTokenForCurrentUser();
+    sl<RecentlyViewedCubit>().ensureStarted();
   }
 
   void _toggleFavorite(ProductEntity product) {
@@ -147,6 +149,25 @@ class _HomeViewState extends State<_HomeView> {
                   onProductTap: _openProduct,
                   onFavoriteToggle: _toggleFavorite,
                   favoriteIds: favoriteIds,
+                ),
+                BlocBuilder<RecentlyViewedCubit, RecentlyViewedState>(
+                  bloc: sl<RecentlyViewedCubit>(),
+                  builder: (context, recentState) {
+                    if (recentState.products.isEmpty) return const SizedBox.shrink();
+                    return Column(
+                      children: [
+                        const SizedBox(height: AppSpacing.xl),
+                        const SectionHeader(title: 'Recently Viewed'),
+                        const SizedBox(height: AppSpacing.sm),
+                        ProductHorizontalList(
+                          products: recentState.products,
+                          onProductTap: _openProduct,
+                          onFavoriteToggle: _toggleFavorite,
+                          favoriteIds: favoriteIds,
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: AppSpacing.xl),
               ],

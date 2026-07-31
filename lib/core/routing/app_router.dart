@@ -10,6 +10,7 @@ import '../../features/categories/presentation/pages/category_products_page.dart
 import '../../features/checkout/domain/entities/order_entity.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/checkout/presentation/pages/order_confirmation_page.dart';
+import '../../features/comparison/presentation/pages/comparison_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
@@ -178,6 +179,12 @@ abstract class AppRouter {
         name: AppRoutes.notifications,
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const NotificationsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.comparison,
+        name: AppRoutes.comparison,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ComparisonPage(),
       ),
 
       // Upcoming top-level routes (pushed on top of the shell, added as

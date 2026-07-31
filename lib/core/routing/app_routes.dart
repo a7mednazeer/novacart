@@ -23,6 +23,7 @@ abstract class AppRoutes {
   static const String checkout = '/checkout';
   static const String orderConfirmation = '/order-confirmation';
   static const String manageAddresses = '/manage-addresses';
+  static const String comparison = '/comparison';
   static const String profile = '/profile';
   static const String orders = '/orders';
   static const String orderTracking = '/order-tracking/:id';

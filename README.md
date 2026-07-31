@@ -2,8 +2,8 @@
 
 A premium, production-grade Flutter e-commerce app.
 
-## Status: Step 10 of N — Recently Viewed + Biometric Login ✅
-(Steps 1–9 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search, Product Details, Wishlist/Cart, Checkout, Order History/Tracking, Notifications/Profile — are complete; summaries retained below.)
+## Status: Step 11 of N — Product Comparison + Support Chat ✅
+(Steps 1–10 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search, Product Details, Wishlist/Cart, Checkout, Order History/Tracking, Notifications/Profile, Recently Viewed/Biometric Login — are complete; summaries retained below.)
 
 ## Architecture
 
@@ -503,15 +503,46 @@ flag on `SplashState` and a whole new lock-screen view in `SplashPage`.
    device actually supports biometrics (checked once on mount) — no
    point showing a switch that can never work.
 
+## Step 11 — Product Comparison + Support Chat (this delivery)
+
+**New folders**: `features/comparison/presentation/{cubit,pages,widgets}`,
+`features/support/presentation/pages`.
+
+1. **`ComparisonCubit` is deliberately *not* Firestore-backed** — the
+   first app-wide singleton in NovaCart that's pure in-memory state.
+   Every other singleton (Wishlist, Cart, Notifications, Recently
+   Viewed) persists because that data matters across sessions/devices;
+   a product comparison is a throwaway part of one browsing session, so
+   adding a repository/data-source layer for it would be needless
+   ceremony. `toggle()` returns a `bool` (rather than throwing or
+   silently no-op-ing) so the caller can show a "you can compare up to
+   3" message right at the point of the failed attempt.
+2. **Category Products screen** gets a compare-mode toggle in the app
+   bar: while active, tapping a product selects/deselects it for
+   comparison (instead of opening Product Details), a small checkmark
+   overlay shows selection state, and a bottom bar appears once 2+ are
+   selected ("Compare (2)" → pushes the comparison table).
+3. **Comparison Page**: a real side-by-side `Table` (brand, price,
+   rating, units sold, category, color swatches, sizes) for 2-3
+   products, each column individually removable, "Clear All", and a
+   proper empty state pointing back to Categories.
+4. **Support Chat placeholder**: exactly what the original spec called
+   for — a mock conversational UI (bubbles, typing indicator, canned
+   contextual replies for "order"/"return" keywords) with clearly
+   documented code comments that this is a UI placeholder, not a real
+   Intercom/Zendesk/WebSocket integration. Help Center's "Contact
+   Support" button now opens this instead of a snackbar stub.
+
 ## Next step (awaiting your confirmation)
 
-The core shopping loop, auth, account management, and these two extra
-polish features are now all in place. Natural next steps from here:
-**Product Comparison** (select 2-3 products from a category grid, view
-a side-by-side spec table — mentioned in the original spec, not yet
-built), a **Customer Support chat placeholder** (Help Center's "Contact
-Support" currently just shows a snackbar), **full localization** (the
-ARB files noted in Step 9), or a **general polish pass** (more
-pull-to-refresh/offline states, empty-state illustrations, richer
-shared-element transitions). Let me know which direction you'd like to
-take next.
+With Product Comparison and Support Chat in place, every major feature
+from the original spec now has at least a working implementation or a
+clearly-labeled, honest placeholder. Good directions from here: **full
+localization** (the ARB files noted in Step 9 — the biggest remaining
+gap between "infrastructure exists" and "actually done"), a **general
+polish pass** (more pull-to-refresh/offline states, empty-state
+illustrations, richer shared-element transitions, tablet/responsive
+layout checks), or **hardening for real deployment** (Firestore
+security rules review, app icons/splash assets, `flutter_launcher_icons`
+run, a first real TestFlight/Play Console build). Let me know which
+direction you'd like to take next.

@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-
 import 'core/di/injection_container.dart';
 import 'core/routing/app_router.dart';
 import 'core/services/push_notification_service.dart';
@@ -12,6 +11,7 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/language_cubit.dart';
 import 'core/theme/theme_cubit.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
+import 'features/comparison/presentation/cubit/comparison_cubit.dart';
 import 'features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'features/recently_viewed/presentation/cubit/recently_viewed_cubit.dart';
 import 'features/wishlist/presentation/cubit/wishlist_cubit.dart';
@@ -69,6 +69,7 @@ class NovaCartApp extends StatelessWidget {
         ),
         BlocProvider<NotificationsCubit>.value(value: sl<NotificationsCubit>()),
         BlocProvider<RecentlyViewedCubit>.value(value: sl<RecentlyViewedCubit>()),
+        BlocProvider<ComparisonCubit>.value(value: sl<ComparisonCubit>()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

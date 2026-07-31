@@ -4,6 +4,7 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../support/presentation/pages/support_chat_page.dart';
 
 class HelpCenterPage extends StatelessWidget {
   const HelpCenterPage({super.key});
@@ -84,9 +85,8 @@ class HelpCenterPage extends StatelessWidget {
             label: 'Contact Support',
             variant: AppButtonVariant.outlined,
             icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18, color: AppColors.primary),
-            onPressed: () => AppSnackBar.showInfo(
-              context,
-              'Live chat support is coming in a future update.',
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const SupportChatPage()),
             ),
           ),
         ],

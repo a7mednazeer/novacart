@@ -68,7 +68,10 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   void _openCategory(CategoryEntity category) {
-    AppSnackBar.showInfo(context, '${category.name} — coming in Categories screen');
+    context.push(
+      AppRoutes.categoryProducts,
+      extra: {'category': category.name},
+    );
   }
 
   @override

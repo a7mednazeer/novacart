@@ -29,6 +29,7 @@ import '../../features/recently_viewed/data/repositories/recently_viewed_reposit
 import '../../features/recently_viewed/domain/repositories/recently_viewed_repository.dart';
 import '../../features/recently_viewed/domain/usecases/record_product_view_usecase.dart';
 import '../../features/recently_viewed/presentation/cubit/recently_viewed_cubit.dart';
+import '../../features/comparison/presentation/cubit/comparison_cubit.dart';
 import '../../features/product/data/datasources/product_remote_datasource.dart';
 import '../../features/home/data/repositories/home_repository_impl.dart';
 import '../../features/home/domain/repositories/home_repository.dart';
@@ -353,4 +354,9 @@ Future<void> initDependencyInjection({bool firebaseInitialized = false}) async {
   sl.registerLazySingleton<RecentlyViewedCubit>(
     () => RecentlyViewedCubit(sl(), sl(), sl(), sl()),
   );
+
+  // ---------------------------------------------------------------------
+  // Feature: Comparison (in-memory only — no repository/data layer needed)
+  // ---------------------------------------------------------------------
+  sl.registerLazySingleton<ComparisonCubit>(() => ComparisonCubit());
 }

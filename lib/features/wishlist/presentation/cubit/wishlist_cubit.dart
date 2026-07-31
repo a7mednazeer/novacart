@@ -51,7 +51,7 @@ class WishlistCubit extends Cubit<WishlistState> {
       // If they weren't loaded, we'll wait for the explicit loadProducts() call.
       emit(state.copyWith(
         ids: ids,
-        products: _resolveFromCurrentProducts(ids),
+        products: state.products == null ? null : _resolveFromCurrentProducts(ids),
       ));
     });
   }

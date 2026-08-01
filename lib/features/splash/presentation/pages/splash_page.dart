@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/routing/app_routes.dart';
@@ -12,6 +10,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/gradient_scaffold_background.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
+import 'package:novacart/generated/l10n/app_localizations.dart';
 import '../cubit/splash_cubit.dart';
 
 /// The very first screen a user sees. Shows the NovaCart brand mark
@@ -86,7 +85,7 @@ class _BiometricLockViewState extends State<_BiometricLockView> {
     });
 
     final success = await sl<BiometricAuthService>().authenticate(
-      reason: 'Unlock NovaCart',
+      reason: AppLocalizations.of(context).unlockNovaCartTitle,
     );
 
     if (!mounted) return;
@@ -106,6 +105,7 @@ class _BiometricLockViewState extends State<_BiometricLockView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: GradientScaffoldBackground(
         child: SafeArea(
@@ -124,16 +124,16 @@ class _BiometricLockViewState extends State<_BiometricLockView> {
                 const SizedBox(height: 16),
                 Text(
                   _isAuthenticating
-                      ? 'Waiting for authentication…'
+                      ? l10n.waitingForAuthMessage
                       : _lastAttemptFailed
-                          ? "Couldn't verify it's you"
-                          : 'Unlock NovaCart',
+                          ? l10n.couldntVerifyMessage
+                          : l10n.unlockNovaCartTitle,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.h2(color: Colors.white),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Use Face ID, Touch ID, or your device PIN to continue.',
+                  l10n.useFaceIdMessage,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.bodyMedium(
                     color: Colors.white.withValues(alpha: 0.85),
@@ -141,11 +141,11 @@ class _BiometricLockViewState extends State<_BiometricLockView> {
                 ),
                 const Spacer(flex: 2),
                 if (_lastAttemptFailed && !_isAuthenticating) ...[
-                  AppButton(label: 'Try Again', onPressed: _attemptUnlock),
+                  AppButton(label: l10n.retry, onPressed: _attemptUnlock),
                   const SizedBox(height: 12),
                 ],
                 AppButton(
-                  label: 'Sign in with password instead',
+                  label: l10n.signInWithPasswordInstead,
                   variant: AppButtonVariant.text,
                   onPressed: _isAuthenticating ? null : _signInWithPasswordInstead,
                 ),
@@ -184,7 +184,7 @@ class _SplashView extends StatelessWidget {
                   ),
               const SizedBox(height: 14),
               Text(
-                'Shop smarter. Arrive faster.',
+                AppLocalizations.of(context).splashTagline,
                 style: AppTextStyles.bodyMedium(
                   color: Colors.white.withValues(alpha: 0.85),
                 ),

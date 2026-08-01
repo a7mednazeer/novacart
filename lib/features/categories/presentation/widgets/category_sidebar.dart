@@ -54,7 +54,7 @@ class CategorySidebar extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    category.name,
+                    category.localizedName(context),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

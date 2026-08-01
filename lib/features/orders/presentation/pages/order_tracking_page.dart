@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:novacart/features/checkout/domain/entities/payment_method.dart';
-
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
@@ -15,6 +13,8 @@ import '../../../../core/widgets/shimmer_box.dart';
 import '../../../cart/presentation/widgets/order_summary_card.dart';
 import '../cubit/order_details_cubit.dart';
 import '../widgets/order_status_timeline.dart';
+import '../../../../generated/l10n/app_localizations.dart';
+import '../../../checkout/presentation/utils/payment_method_display.dart';
 
 class OrderTrackingPage extends StatelessWidget {
   const OrderTrackingPage({super.key, required this.orderId});
@@ -34,8 +34,9 @@ class _OrderTrackingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Order Tracking')),
+      appBar: AppBar(title: Text(l10n.orderTrackingTitle)),
       body: BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
         builder: (context, state) {
           if (state is OrderDetailsLoading) {
@@ -52,9 +53,9 @@ class _OrderTrackingView extends StatelessWidget {
           if (state is OrderDetailsNotFound) {
             return EmptyStateView(
               icon: Icons.search_off_rounded,
-              title: 'Order not found',
-              message: 'We couldn\'t find this order.',
-              actionLabel: 'Back to Orders',
+              title: l10n.orderNotFoundTitle,
+              message: l10n.orderNotFoundMessage,
+              actionLabel: l10n.backToOrdersLabel,
               onAction: () => context.go(AppRoutes.orders),
             );
           }
@@ -82,7 +83,7 @@ class _OrderTrackingView extends StatelessWidget {
                 child: OrderStatusTimeline(order: order),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Items (${order.itemCount})',
+              Text(l10n.itemsWithCountLabel(order.itemCount),
                   style: AppTextStyles.h3(color: textPrimary)),
               const SizedBox(height: AppSpacing.sm),
               ...order.items.map((item) => Padding(
@@ -109,7 +110,7 @@ class _OrderTrackingView extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppTextStyles.bodyMedium(color: textPrimary)),
-                              Text('Qty ${item.quantity}',
+                              Text(l10n.qtyLabel(item.quantity),
                                   style: AppTextStyles.bodySmall(
                                       color: AppColors.textSecondaryLight)),
                             ],
@@ -121,17 +122,17 @@ class _OrderTrackingView extends StatelessWidget {
                     ),
                   )),
               const SizedBox(height: AppSpacing.lg),
-              Text('Shipping Address', style: AppTextStyles.h3(color: textPrimary)),
+              Text(l10n.shippingAddressTitle, style: AppTextStyles.h3(color: textPrimary)),
               const SizedBox(height: 4),
               Text(
                 '${order.address.fullName}\n${order.address.phone}\n${order.address.addressLine}, ${order.address.city}',
                 style: AppTextStyles.bodyMedium(color: AppColors.textSecondaryLight),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Payment Method', style: AppTextStyles.h3(color: textPrimary)),
+              Text(l10n.paymentMethodTitle, style: AppTextStyles.h3(color: textPrimary)),
               const SizedBox(height: 4),
               Text(
-                order.paymentMethod.label,
+                paymentMethodLabel(l10n, order.paymentMethod),
                 style: AppTextStyles.bodyMedium(color: AppColors.textSecondaryLight),
               ),
               const SizedBox(height: AppSpacing.lg),

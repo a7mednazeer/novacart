@@ -5,6 +5,8 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/widgets/shimmer_box.dart';
 import '../../../checkout/domain/entities/order_entity.dart';
+import 'package:novacart/generated/l10n/app_localizations.dart';
+import '../../../checkout/presentation/utils/order_status_display.dart';
 
 class OrderCard extends StatelessWidget {
   const OrderCard({super.key, required this.order, required this.onTap});
@@ -27,6 +29,7 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
     final date = order.createdAt;
     final statusColor = _statusColor(order.status);
@@ -48,7 +51,9 @@ class OrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Order #${order.id.length >= 8 ? order.id.substring(0, 8).toUpperCase() : order.id.toUpperCase()}',
+                  l10n.orderNumberLabel(
+                    order.id.length >= 8 ? order.id.substring(0, 8).toUpperCase() : order.id.toUpperCase(),
+                  ),
                   style: AppTextStyles.bodyMedium(color: textPrimary)
                       .copyWith(fontWeight: FontWeight.w700),
                 ),
@@ -59,7 +64,7 @@ class OrderCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
                   child: Text(
-                    order.status.label,
+                    orderStatusLabel(l10n, order.status),
                     style: AppTextStyles.caption(color: statusColor)
                         .copyWith(fontWeight: FontWeight.w700),
                   ),
@@ -68,7 +73,10 @@ class OrderCard extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              '${_months[date.month - 1]} ${date.day}, ${date.year} · ${order.itemCount} item${order.itemCount == 1 ? '' : 's'}',
+              l10n.dateWithItemCount(
+                '${_months[date.month - 1]} ${date.day}, ${date.year}',
+                l10n.itemCount(order.itemCount),
+              ),
               style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
             ),
             const SizedBox(height: AppSpacing.sm),
@@ -100,7 +108,7 @@ class OrderCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
                       child: Text(
-                        '+${order.items.length - 4}',
+                        l10n.moreItemsCount(order.items.length - 4),
                         style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
                       ),
                     ),
@@ -112,7 +120,7 @@ class OrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Total',
+                  l10n.totalLabel,
                   style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
                 ),
                 Text(

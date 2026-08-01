@@ -17,7 +17,7 @@ class CategoryQuickList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100,
+      height: 110,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
@@ -28,12 +28,12 @@ class CategoryQuickList extends StatelessWidget {
           return GestureDetector(
             onTap: () => onCategoryTap(category),
             child: SizedBox(
-              width: 68,
+              width: 80,
               child: Column(
                 children: [
                   Container(
-                    width: double.infinity,
-                    height: 60,
+                    width: 56,
+                    height: 56,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
@@ -49,7 +49,7 @@ class CategoryQuickList extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    category.name,
+                    category.localizedName(context),
                     maxLines: 2,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,

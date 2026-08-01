@@ -17,6 +17,7 @@ import '../../../cart/presentation/cubit/cart_cubit.dart';
 import '../../../product/domain/entities/product_entity.dart';
 import '../../../recently_viewed/presentation/cubit/recently_viewed_cubit.dart';
 import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../cubit/product_details_cubit.dart';
 import '../widgets/add_to_cart_bar.dart';
 import '../widgets/color_selector.dart';
@@ -50,6 +51,7 @@ class _ProductDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
         builder: (context, state) {
@@ -61,7 +63,7 @@ class _ProductDetailsView extends StatelessWidget {
             return SafeArea(
               child: Column(
                 children: [
-                  AppBar(title: const Text('Product Details')),
+                  AppBar(title: Text(l10n.productDetailsTitle)),
                   Expanded(
                     child: ErrorStateView(
                       message: state.message,
@@ -86,13 +88,13 @@ class _ProductDetailsView extends StatelessWidget {
                     pinned: true,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     surfaceTintColor: Colors.transparent,
-                    title: const Text('Product Details'),
+                    title: Text(l10n.productDetailsTitle),
                     actions: [
                       IconButton(
                         icon: const Icon(Icons.share_outlined),
                         onPressed: () => AppSnackBar.showInfo(
                           context,
-                          'Sharing ${product.name}…',
+                          l10n.sharingProductMessage(product.name),
                         ),
                       ),
                       const CartIconButton(),
@@ -126,8 +128,8 @@ class _ProductDetailsView extends StatelessWidget {
                                         AppSnackBar.showSuccess(
                                           context,
                                           isFavorite
-                                              ? 'Removed from wishlist'
-                                              : 'Added to wishlist',
+                                              ? l10n.removedFromWishlistMessage
+                                              : l10n.addedToWishlistMessage,
                                         );
                                       },
                                     );
@@ -185,7 +187,7 @@ class _ProductDetailsView extends StatelessWidget {
                                   size: 16, color: AppColors.accent),
                               const SizedBox(width: 4),
                               Text(
-                                '${product.soldCount} sold',
+                                l10n.soldCountLabel(product.soldCount),
                                 style: AppTextStyles.bodySmall(
                                   color: AppColors.textSecondaryLight,
                                 ),
@@ -193,12 +195,12 @@ class _ProductDetailsView extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: AppSpacing.lg),
-                          Text('Description', style: AppTextStyles.h3(color: textPrimary)),
+                          Text(l10n.descriptionLabel, style: AppTextStyles.h3(color: textPrimary)),
                           const SizedBox(height: 6),
                           ExpandableDescription(
                             text: product.description.isNotEmpty
                                 ? product.description
-                                : 'No description available for this product yet.',
+                                : l10n.noDescriptionAvailable,
                           ),
                           const SizedBox(height: AppSpacing.xl),
                           SizeSelector(
@@ -242,7 +244,7 @@ class _ProductDetailsView extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                               child: Text(
-                                'You Might Also Like',
+                                l10n.youMightAlsoLike,
                                 style: AppTextStyles.h2(color: textPrimary),
                               ),
                             ),
@@ -285,7 +287,7 @@ class _ProductDetailsView extends StatelessWidget {
                         );
                     AppSnackBar.showSuccess(
                       context,
-                      'Added ${loaded.quantity}× ${product.name} to cart',
+                      l10n.addedToCartMessage(loaded.quantity, product.name),
                     );
                   },
                 )

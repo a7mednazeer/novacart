@@ -17,6 +17,7 @@ import '../../../notifications/presentation/cubit/notifications_cubit.dart';
 import '../../../product/domain/entities/category_entity.dart';
 import '../../../product/domain/entities/product_entity.dart';
 import '../../../recently_viewed/presentation/cubit/recently_viewed_cubit.dart';
+import 'package:novacart/generated/l10n/app_localizations.dart';
 import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
 import '../cubit/home_cubit.dart';
 import '../widgets/category_quick_list.dart';
@@ -76,6 +77,7 @@ class _HomeViewState extends State<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: const _HomeAppBar(),
       body: BlocBuilder<HomeCubit, HomeState>(
@@ -110,7 +112,7 @@ class _HomeViewState extends State<_HomeView> {
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 SectionHeader(
-                  title: 'Categories',
+                  title: l10n.categoriesTitle,
                   onViewAll: () => context.go(AppRoutes.categories),
                 ),
                 const SizedBox(height: AppSpacing.sm),
@@ -127,7 +129,7 @@ class _HomeViewState extends State<_HomeView> {
                 ),
                 if (data.flashSaleProducts.isNotEmpty)
                   const SizedBox(height: AppSpacing.xl),
-                const SectionHeader(title: '🔥 Best Sellers'),
+                SectionHeader(title: l10n.bestSellersTitle),
                 const SizedBox(height: AppSpacing.sm),
                 ProductHorizontalList(
                   products: data.bestSellers,
@@ -136,7 +138,7 @@ class _HomeViewState extends State<_HomeView> {
                   favoriteIds: favoriteIds,
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                const SectionHeader(title: '✨ New Arrivals'),
+                SectionHeader(title: l10n.newArrivalsTitle),
                 const SizedBox(height: AppSpacing.sm),
                 ProductHorizontalList(
                   products: data.newArrivals,
@@ -145,7 +147,7 @@ class _HomeViewState extends State<_HomeView> {
                   favoriteIds: favoriteIds,
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                const SectionHeader(title: 'Recommended for You'),
+                SectionHeader(title: l10n.recommendedTitle),
                 const SizedBox(height: AppSpacing.sm),
                 ProductHorizontalList(
                   products: data.recommended,
@@ -160,7 +162,7 @@ class _HomeViewState extends State<_HomeView> {
                     return Column(
                       children: [
                         const SizedBox(height: AppSpacing.xl),
-                        const SectionHeader(title: 'Recently Viewed'),
+                        SectionHeader(title: l10n.recentlyViewedTitle),
                         const SizedBox(height: AppSpacing.sm),
                         ProductHorizontalList(
                           products: recentState.products,
@@ -207,7 +209,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               const Icon(Icons.search_rounded, size: 20, color: AppColors.textMutedLight),
               const SizedBox(width: AppSpacing.xs),
               Text(
-                'What do you search for?',
+                AppLocalizations.of(context).searchHint,
                 style: AppTextStyles.bodyMedium(color: AppColors.textMutedLight),
               ),
             ],

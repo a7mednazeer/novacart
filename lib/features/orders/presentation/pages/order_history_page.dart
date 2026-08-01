@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/routing/app_routes.dart';
@@ -11,6 +9,7 @@ import '../../../../core/widgets/error_state_view.dart';
 import '../../../../core/widgets/shimmer_box.dart';
 import '../cubit/order_history_cubit.dart';
 import '../widgets/order_card.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class OrderHistoryPage extends StatelessWidget {
   const OrderHistoryPage({super.key});
@@ -29,8 +28,9 @@ class _OrderHistoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Order History')),
+      appBar: AppBar(title: Text(l10n.orderHistoryTitle)),
       body: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
         builder: (context, state) {
           if (state is OrderHistoryLoading) {
@@ -58,9 +58,9 @@ class _OrderHistoryView extends StatelessWidget {
           if (orders.isEmpty) {
             return EmptyStateView(
               icon: Icons.receipt_long_outlined,
-              title: 'No orders yet',
-              message: 'Your past orders will show up here once you place one.',
-              actionLabel: 'Start Shopping',
+              title: l10n.noOrdersYetTitle,
+              message: l10n.noOrdersYetMessage,
+              actionLabel: l10n.startShopping,
               onAction: () => context.go(AppRoutes.home),
             );
           }

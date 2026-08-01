@@ -7,6 +7,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/shimmer_box.dart';
 import '../../../product/domain/entities/category_entity.dart';
 import '../../../product/domain/entities/subcategory_entity.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class SubcategoryGrid extends StatelessWidget {
   const SubcategoryGrid({
@@ -24,6 +25,7 @@ class SubcategoryGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
@@ -64,12 +66,12 @@ class SubcategoryGrid extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        category.name,
+                        category.localizedName(context),
                         style: AppTextStyles.h1(color: Colors.white),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       AppButton(
-                        label: 'Shop Now',
+                        label: l10n.shopNow,
                         onPressed: onBrowseAllTap,
                         fullWidth: false,
                         height: 36,
@@ -86,7 +88,7 @@ class SubcategoryGrid extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Center(
                 child: Text(
-                  'Browse all products in ${category.name}',
+                  l10n.browseAllIn(category.name),
                   style: AppTextStyles.bodyMedium(color: AppColors.textSecondaryLight),
                 ),
               ),

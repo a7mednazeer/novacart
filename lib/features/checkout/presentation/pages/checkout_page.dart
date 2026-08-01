@@ -18,7 +18,8 @@ import '../widgets/add_address_sheet.dart';
 import '../widgets/address_card.dart';
 import '../widgets/checkout_step_header.dart';
 import '../widgets/payment_method_tile.dart';
-import 'order_confirmation_page.dart';
+import '../../../../generated/l10n/app_localizations.dart';
+import '../utils/payment_method_display.dart';
 
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
@@ -40,7 +41,7 @@ class _CheckoutView extends StatelessWidget {
     final cartState = context.watch<CartCubit>().state;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Checkout')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).checkoutTitle)),
       body: BlocConsumer<CheckoutCubit, CheckoutState>(
         listener: (context, state) {
           if (state.errorMessage != null) {
@@ -88,6 +89,7 @@ class _AddressStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (state.isLoadingAddresses) {
       return ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -105,7 +107,7 @@ class _AddressStep extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         Text(
-          'Select a shipping address',
+          l10n.selectShippingAddress,
           style: AppTextStyles.h3(color: Theme.of(context).colorScheme.onSurface),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -134,7 +136,7 @@ class _AddressStep extends StatelessWidget {
             ),
           ),
           icon: const Icon(Icons.add_rounded, size: 18),
-          label: const Text('Add New Address'),
+          label: Text(l10n.addNewAddress),
         ),
       ],
     );
@@ -148,11 +150,12 @@ class _PaymentStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         Text(
-          'Select a payment method',
+          l10n.selectPaymentMethod,
           style: AppTextStyles.h3(color: Theme.of(context).colorScheme.onSurface),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -177,7 +180,7 @@ class _PaymentStep extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    'This is a demo checkout — no real payment will be charged.',
+                    l10n.demoCheckoutDisclaimer,
                     style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
                   ),
                 ),
@@ -203,13 +206,14 @@ class _ReviewStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
     final address = checkoutState.selectedAddress;
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
-        Text('${cartState.itemCount} item${cartState.itemCount == 1 ? '' : 's'}',
+        Text(l10n.itemCount(cartState.itemCount),
             style: AppTextStyles.h3(color: textPrimary)),
         const SizedBox(height: AppSpacing.sm),
         ...cartState.items.map((line) => Padding(
@@ -234,10 +238,10 @@ class _ReviewStep extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Shipping to', style: AppTextStyles.h3(color: textPrimary)),
+            Text(l10n.shippingToLabel, style: AppTextStyles.h3(color: textPrimary)),
             TextButton(
               onPressed: () => cubit.goToStep(CheckoutStep.address),
-              child: const Text('Change'),
+              child: Text(l10n.changeLabel),
             ),
           ],
         ),
@@ -250,15 +254,15 @@ class _ReviewStep extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Payment', style: AppTextStyles.h3(color: textPrimary)),
+            Text(l10n.stepPaymentLabel, style: AppTextStyles.h3(color: textPrimary)),
             TextButton(
               onPressed: () => cubit.goToStep(CheckoutStep.payment),
-              child: const Text('Change'),
+              child: Text(l10n.changeLabel),
             ),
           ],
         ),
         Text(
-          checkoutState.paymentMethod.label,
+          paymentMethodLabel(l10n, checkoutState.paymentMethod),
           style: AppTextStyles.bodyMedium(color: AppColors.textSecondaryLight),
         ),
         const SizedBox(height: AppSpacing.lg),
@@ -282,6 +286,7 @@ class _BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final cartState = context.watch<CartCubit>().state;
 
     return Container(
@@ -304,14 +309,14 @@ class _BottomBar extends StatelessWidget {
                 padding: const EdgeInsets.only(right: AppSpacing.sm),
                 child: OutlinedButton(
                   onPressed: cubit.previousStep,
-                  child: const Text('Back'),
+                  child: Text(l10n.backLabel),
                 ),
               ),
             Expanded(
               child: AppButton(
                 label: state.step == CheckoutStep.review
-                    ? 'Place Order · EGP ${cartState.total.toStringAsFixed(0)}'
-                    : 'Continue',
+                    ? l10n.placeOrderWithTotal(cartState.total.toStringAsFixed(0))
+                    : l10n.continueLabel,
                 isLoading: state.isPlacingOrder,
                 onPressed: state.step == CheckoutStep.address && !state.canProceedFromAddress
                     ? null

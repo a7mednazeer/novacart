@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:novacart/generated/l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 
 /// The persistent bottom-nav shell used by [StatefulShellRoute]. Each
@@ -24,6 +25,8 @@ class ScaffoldWithNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
@@ -31,26 +34,26 @@ class ScaffoldWithNavBar extends StatelessWidget {
         onDestinationSelected: _onTap,
         backgroundColor: Theme.of(context).colorScheme.surface,
         indicatorColor: AppColors.primary.withValues(alpha: 0.10),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home_rounded, color: AppColors.primary),
-            label: 'Home',
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home_rounded, color: AppColors.primary),
+            label: l10n.navHome,
           ),
           NavigationDestination(
-            icon: Icon(Icons.grid_view_outlined),
-            selectedIcon: Icon(Icons.grid_view_rounded, color: AppColors.primary),
-            label: 'Categories',
+            icon: const Icon(Icons.grid_view_outlined),
+            selectedIcon: const Icon(Icons.grid_view_rounded, color: AppColors.primary),
+            label: l10n.navCategories,
           ),
           NavigationDestination(
-            icon: Icon(Icons.favorite_border_rounded),
-            selectedIcon: Icon(Icons.favorite_rounded, color: AppColors.primary),
-            label: 'Wishlist',
+            icon: const Icon(Icons.favorite_border_rounded),
+            selectedIcon: const Icon(Icons.favorite_rounded, color: AppColors.primary),
+            label: l10n.navWishlist,
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded, color: AppColors.primary),
-            label: 'Profile',
+            icon: const Icon(Icons.person_outline_rounded),
+            selectedIcon: const Icon(Icons.person_rounded, color: AppColors.primary),
+            label: l10n.navProfile,
           ),
         ],
       ),

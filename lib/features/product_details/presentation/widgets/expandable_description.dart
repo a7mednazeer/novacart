@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class ExpandableDescription extends StatefulWidget {
   const ExpandableDescription({super.key, required this.text});
@@ -32,7 +33,9 @@ class _ExpandableDescriptionState extends State<ExpandableDescription> {
           child: Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              _expanded ? 'Show Less' : 'Read More',
+              _expanded
+                  ? AppLocalizations.of(context).showLessLabel
+                  : AppLocalizations.of(context).readMoreLabel,
               style: AppTextStyles.bodySmall(color: AppColors.primary)
                   .copyWith(fontWeight: FontWeight.w600),
             ),

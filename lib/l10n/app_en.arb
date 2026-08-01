@@ -1,0 +1,527 @@
+{
+  "@@locale": "en",
+
+  "appName": "NovaCart",
+  "@appName": {"description": "The app's name, shown on the splash screen"},
+
+  "continueLabel": "Continue",
+  "cancel": "Cancel",
+  "retry": "Try Again",
+  "somethingWentWrong": "Something went wrong",
+  "skip": "Skip",
+  "next": "Next",
+
+  "splashTagline": "Shop smarter. Arrive faster.",
+
+  "onboardingGetStarted": "Get Started",
+  "onboarding1Title": "Shop Everything,\nAll in One Place",
+  "onboarding1Desc": "Explore thousands of curated products across fashion, tech, home and more — all from one seamless app.",
+  "onboarding2Title": "Fast, Trackable\nDelivery",
+  "onboarding2Desc": "Get real-time order tracking and reliable delivery estimates, right from checkout to your doorstep.",
+  "onboarding3Title": "Secure & Trusted\nCheckout",
+  "onboarding3Desc": "Pay your way with bank-grade security — cards, wallets, or cash on delivery, your choice, every time.",
+
+  "welcomeBack": "Welcome back",
+  "signInSubtitle": "Sign in to continue shopping with NovaCart",
+  "emailLabel": "Email",
+  "emailHint": "you@example.com",
+  "passwordLabel": "Password",
+  "passwordHint": "Enter your password",
+  "rememberMe": "Remember me",
+  "forgotPassword": "Forgot password?",
+  "signIn": "Sign In",
+  "orContinueWith": "or continue with",
+  "continueWithGoogle": "Continue with Google",
+  "noAccount": "Don't have an account? ",
+  "createAccount": "Create Account",
+
+  "joinNovaCart": "Join NovaCart",
+  "signUpSubtitle": "Create an account to start shopping smarter",
+  "fullNameLabel": "Full Name",
+  "confirmPasswordLabel": "Confirm Password",
+  "agreeTerms": "I agree to the Terms & Conditions and Privacy Policy",
+
+  "resetPasswordTitle": "Reset your password",
+  "resetPasswordSubtitle": "Enter the email associated with your account and we'll send you a link to reset your password.",
+  "resetLinkSentMessage": "We sent a password reset link to {email}. Follow the instructions in the email to set a new password.",
+  "@resetLinkSentMessage": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "sendResetLink": "Send Reset Link",
+  "backToSignIn": "Back to Sign In",
+  "resendLink": "Resend Link",
+  "checkYourEmail": "Check your email",
+
+  "navHome": "Home",
+  "navCategories": "Categories",
+  "navWishlist": "Wishlist",
+  "navProfile": "Profile",
+
+  "searchHint": "What do you search for?",
+  "categoriesTitle": "Categories",
+  "flashSaleTitle": "⚡ Flash Sale",
+  "bestSellersTitle": "🔥 Best Sellers",
+  "newArrivalsTitle": "✨ New Arrivals",
+  "recommendedTitle": "Recommended for You",
+  "recentlyViewedTitle": "Recently Viewed",
+  "viewAll": "View all",
+
+  "addToCart": "Add to Cart",
+  "outOfStock": "Out of Stock",
+
+  "cartTitle": "Cart",
+  "yourCartIsEmpty": "Your cart is empty",
+  "addProductsMessage": "Add products to your cart to see them here.",
+  "startShopping": "Start Shopping",
+  "savedForLaterSection": "Saved for Later",
+  "moveToCart": "Move to Cart",
+  "saveForLater": "Save for Later",
+  "checkout": "Checkout",
+  "orderSummary": "Order Summary",
+  "subtotal": "Subtotal",
+  "discountLabel": "Discount",
+  "shippingLabel": "Shipping",
+  "freeLabel": "Free",
+  "vatLabel": "VAT (14%)",
+  "totalLabel": "Total",
+  "estimatedDeliveryLabel": "Estimated delivery: {date}",
+  "@estimatedDeliveryLabel": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "enterCouponCode": "Enter coupon code",
+  "applyLabel": "Apply",
+  "couponApplied": "{code} applied",
+  "@couponApplied": {
+    "placeholders": {
+      "code": {"type": "String"}
+    }
+  },
+
+  "wishlistTitle": "Wishlist",
+  "wishlistEmptyTitle": "Your wishlist is empty",
+  "wishlistEmptyMessage": "Tap the heart on any product to save it here for later.",
+  "browseProducts": "Browse Products",
+
+  "shopNow": "Shop Now",
+  "browseAllIn": "Browse all products in {category}",
+  "@browseAllIn": {
+    "placeholders": {
+      "category": {"type": "String"}
+    }
+  },
+
+  "searchResultsFor": "{count} results for \"{query}\"",
+  "@searchResultsFor": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "query": {"type": "String"}
+    }
+  },
+  "noResultsFound": "No results found",
+  "recentSearchesTitle": "Recent Searches",
+  "clearAll": "Clear All",
+  "trendingSearchesTitle": "Trending Searches",
+  "filterAndSort": "Filter & Sort",
+  "filtersCount": "Filters ({count})",
+  "@filtersCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "itemCount": "{count, plural, one{{count} item} other{{count} items}}",
+  "@itemCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "cartIsEmptyShort": "Cart is empty",
+  "moveItemsBackMessage": "Move items back from Saved for Later, or keep shopping.",
+  "savedForLaterCount": "Saved for Later ({count})",
+  "@savedForLaterCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "checkoutWithTotal": "Checkout · EGP {amount}",
+  "@checkoutWithTotal": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "invalidCouponMessage": "Invalid or expired coupon code",
+
+  "productsCountLabel": "{count, plural, one{{count} product} other{{count} products}}",
+  "@productsCountLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "noProductsFoundTitle": "No products found",
+  "tryAdjustingFiltersMessage": "Try adjusting your filters to see more results.",
+  "clearFiltersLabel": "Clear Filters",
+  "compareProductsTooltip": "Compare products",
+  "compareProductsWithCount": "Compare ({count})",
+  "@compareProductsWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "selectAtLeastTwoToCompare": "Select at least 2 to compare",
+
+  "noResultsForQuery": "We couldn't find anything for \"{query}\". Try a different keyword.",
+  "@noResultsForQuery": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "noProductsMatchFiltersMessage": "No products match your filters. Try adjusting them.",
+  "searchFieldHint": "Search products, brands…",
+
+  "resetLabel": "Reset",
+  "sortByLabel": "Sort By",
+  "priceRangeLabel": "Price Range",
+  "minimumRatingLabel": "Minimum Rating",
+  "anyLabel": "Any",
+  "brandLabel": "Brand",
+  "applyFiltersLabel": "Apply Filters",
+  "sortRelevance": "Relevance",
+  "sortPriceLowToHigh": "Price: Low to High",
+  "sortPriceHighToLow": "Price: High to Low",
+  "sortRatingHighToLow": "Highest Rated",
+  "sortNewest": "Newest First",
+
+  "productDetailsTitle": "Product Details",
+  "descriptionLabel": "Description",
+  "noDescriptionAvailable": "No description available for this product yet.",
+  "readMoreLabel": "Read More",
+  "showLessLabel": "Show Less",
+  "sizeLabel": "Size",
+  "colorLabel": "Color",
+  "youMightAlsoLike": "You Might Also Like",
+  "soldCountLabel": "{count} sold",
+  "@soldCountLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "sharingProductMessage": "Sharing {name}…",
+  "@sharingProductMessage": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "addedToCartMessage": "Added {quantity}× {name} to cart",
+  "@addedToCartMessage": {
+    "placeholders": {
+      "quantity": {"type": "int"},
+      "name": {"type": "String"}
+    }
+  },
+  "addedToWishlistMessage": "Added to wishlist",
+  "removedFromWishlistMessage": "Removed from wishlist",
+  "ratingsAndReviewsTitle": "Ratings & Reviews",
+  "reviewsCountLabel": "{count, plural, one{{count} review} other{{count} reviews}}",
+  "@reviewsCountLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "viewAllReviewsLabel": "{count, plural, one{View 1 review} other{View all {count} reviews}}",
+  "@viewAllReviewsLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "estimatedDeliveryTitle": "Estimated delivery",
+  "arrivesByMessage": "Arrives by {date} if ordered today",
+  "@arrivesByMessage": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "freeReturnsTitle": "Free returns",
+  "freeReturnsSubtitle": "30-day return window, no questions asked",
+  "secureCheckoutTitle": "Secure checkout",
+  "secureCheckoutSubtitle": "Cash on delivery, cards, and digital wallets accepted",
+  "specificationsTitle": "Specifications",
+  "categoryLabel": "Category",
+  "availableColorsLabel": "Available Colors",
+  "availableColorsValue": "{count} options",
+  "@availableColorsValue": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "availableSizesLabel": "Available Sizes",
+  "unitsSoldLabel": "Units Sold",
+  "unitsSoldValue": "{count}+",
+  "@unitsSoldValue": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "todayLabel": "Today",
+  "daysAgoLabel": "{count, plural, one{1 day ago} other{{count} days ago}}",
+  "@daysAgoLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "monthsAgoLabel": "{count, plural, one{1 month ago} other{{count} months ago}}",
+  "@monthsAgoLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "allReviewsTitle": "All Reviews ({count})",
+  "@allReviewsTitle": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "addToCartWithTotal": "Add to Cart · EGP {amount}",
+  "@addToCartWithTotal": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+
+  "paymentCashOnDelivery": "Cash on Delivery",
+  "paymentCard": "Credit / Debit Card",
+  "paymentApplePay": "Apple Pay",
+  "paymentGooglePay": "Google Pay",
+  "paymentCodSubtitle": "Pay when your order arrives",
+  "paymentCardSubtitle": "Visa, Mastercard, and more",
+  "paymentApplePaySubtitle": "Pay instantly with Face ID / Touch ID",
+  "paymentGooglePaySubtitle": "Pay instantly with your Google account",
+
+  "orderStatusProcessing": "Processing",
+  "orderStatusShipped": "Shipped",
+  "orderStatusOutForDelivery": "Out for Delivery",
+  "orderStatusDelivered": "Delivered",
+  "orderStatusCancelled": "Cancelled",
+
+  "checkoutTitle": "Checkout",
+  "selectShippingAddress": "Select a shipping address",
+  "addNewAddress": "Add New Address",
+  "selectPaymentMethod": "Select a payment method",
+  "demoCheckoutDisclaimer": "This is a demo checkout — no real payment will be charged.",
+  "stepAddressLabel": "Address",
+  "stepPaymentLabel": "Payment",
+  "stepReviewLabel": "Review",
+  "changeLabel": "Change",
+  "shippingToLabel": "Shipping to",
+  "backLabel": "Back",
+  "placeOrderWithTotal": "Place Order · EGP {amount}",
+  "@placeOrderWithTotal": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "defaultLabel": "DEFAULT",
+  "phoneNumberLabel": "Phone Number",
+  "addressHintLabel": "Street, building, apartment number",
+  "cityLabel": "City",
+  "saveAddressLabel": "Save Address",
+
+  "orderPlacedTitle": "Order Placed!",
+  "orderConfirmedMessage": "Your order #{orderId} has been confirmed.",
+  "@orderConfirmedMessage": {
+    "placeholders": {
+      "orderId": {"type": "String"}
+    }
+  },
+  "itemsLabel": "Items",
+  "totalPaidLabel": "Total Paid",
+  "continueShoppingLabel": "Continue Shopping",
+  "viewOrderLabel": "View Order",
+
+  "orderTrackingTitle": "Order Tracking",
+  "orderHistoryTitle": "Order History",
+  "orderNotFoundTitle": "Order not found",
+  "orderNotFoundMessage": "We couldn't find this order.",
+  "backToOrdersLabel": "Back to Orders",
+  "noOrdersYetTitle": "No orders yet",
+  "noOrdersYetMessage": "Your past orders will show up here once you place one.",
+  "itemsWithCountLabel": "Items ({count})",
+  "@itemsWithCountLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "qtyLabel": "Qty {count}",
+  "@qtyLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "shippingAddressTitle": "Shipping Address",
+  "paymentMethodTitle": "Payment Method",
+  "orderCancelledMessage": "This order was cancelled.",
+  "orderNumberLabel": "Order #{id}",
+  "@orderNumberLabel": {
+    "placeholders": {
+      "id": {"type": "String"}
+    }
+  },
+  "moreItemsCount": "+{count}",
+  "@moreItemsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "dateWithItemCount": "{date} · {itemText}",
+  "@dateWithItemCount": {
+    "placeholders": {
+      "date": {"type": "String"},
+      "itemText": {"type": "String"}
+    }
+  },
+  "stageProcessingTitle": "Order Processing",
+  "stageProcessingSubtitle": "We've received your order",
+  "stageShippedSubtitle": "Your order has left our warehouse",
+  "stageOutForDeliverySubtitle": "Your order is on its way",
+  "stageDeliveredSubtitle": "Enjoy your order!",
+
+  "notificationsTitle": "Notifications",
+  "markAllReadLabel": "Mark all read",
+  "noNotificationsYetTitle": "No notifications yet",
+  "noNotificationsYetMessage": "Order updates and promotions will show up here.",
+  "minutesAgoShort": "{count}m ago",
+  "@minutesAgoShort": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "hoursAgoShort": "{count}h ago",
+  "@hoursAgoShort": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "daysAgoShort": "{count}d ago",
+  "@daysAgoShort": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "profileTitle": "Profile",
+  "yourNovaCartAccount": "Your NovaCart Account",
+  "tapToEditProfileMessage": "Tap to edit your name & phone number",
+  "darkModeLabel": "Dark Mode",
+  "languageLabel": "Language",
+  "selectLanguage": "Select Language",
+  "savedAddressesLabel": "Saved Addresses",
+  "paymentMethodsLabel": "Payment Methods",
+  "helpCenterLabel": "Help Center",
+  "privacyPolicyLabel": "Privacy Policy",
+  "termsConditionsLabel": "Terms & Conditions",
+  "signOutLabel": "Sign Out",
+  "biometricConfirmReason": "Confirm to enable biometric login",
+  "biometricLoginLabel": "Biometric Login",
+  "biometricLoginSubtitle": "Require Face ID / Touch ID to open the app",
+  "comingSoonSuffix": "{feature} — coming soon",
+  "@comingSoonSuffix": {
+    "placeholders": {
+      "feature": {"type": "String"}
+    }
+  },
+
+  "editProfileTitle": "Edit Profile",
+  "profileUpdatedMessage": "Profile updated",
+  "saveChangesLabel": "Save Changes",
+
+  "rtlNoteMessage": "Layout direction updates instantly. Full Arabic text translation is coming in a future update.",
+
+  "noSavedAddressesTitle": "No saved addresses",
+  "noSavedAddressesMessage": "Add a shipping address to speed up checkout next time.",
+
+  "helpCenterFaqTitle": "Frequently Asked Questions",
+  "faqQ1": "How do I track my order?",
+  "faqA1": "Go to Profile → Order History, tap any order to see its live status timeline.",
+  "faqQ2": "What payment methods are accepted?",
+  "faqA2": "Cash on Delivery, Credit/Debit Card, Apple Pay, and Google Pay.",
+  "faqQ3": "How do I return an item?",
+  "faqA3": "Items are eligible for return within 30 days of delivery. Contact support from this screen to start a return.",
+  "faqQ4": "How long does delivery take?",
+  "faqA4": "Most orders arrive within 3-5 business days. You'll see an estimated delivery date at checkout and in your order tracking.",
+  "faqQ5": "How do I apply a coupon code?",
+  "faqA5": "Enter it in the Cart screen just above the order summary, then tap Apply.",
+  "stillNeedHelpTitle": "Still need help?",
+  "contactSupportLabel": "Contact Support",
+
+  "aboutFeedbackTitle": "About & Feedback",
+  "loadingVersionLabel": "Loading version…",
+  "versionLabel": "Version {version}",
+  "@versionLabel": {
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
+  "sendUsFeedbackTitle": "Send us feedback",
+  "feedbackIntroMessage": "Found a bug or have an idea to make NovaCart better? We read every message.",
+  "feedbackHintText": "Tell us what you think…",
+  "submitFeedbackLabel": "Submit Feedback",
+  "feedbackThanksMessage": "Thanks for your feedback!",
+  "feedbackErrorMessage": "Could not submit feedback. Please try again.",
+
+  "privacySection1Heading": "Information We Collect",
+  "privacySection1Body": "We collect the information you provide directly (name, email, phone, shipping addresses) and information generated by using the app (order history, wishlist, browsing activity) to operate NovaCart.",
+  "privacySection2Heading": "How We Use Your Information",
+  "privacySection2Body": "Your information is used to process orders, provide customer support, personalize product recommendations, and send order/promotional notifications you can opt out of at any time.",
+  "privacySection3Heading": "Data Security",
+  "privacySection3Body": "All data is stored using Firebase's secure infrastructure with per-user access rules — no other user or unauthenticated request can read your orders, addresses, or wishlist.",
+  "privacySection4Heading": "Your Rights",
+  "privacySection4Body": "You can edit or delete your personal information, saved addresses, and account at any time from the Profile section.",
+
+  "termsSection1Heading": "Acceptance of Terms",
+  "termsSection1Body": "By creating a NovaCart account or placing an order, you agree to these Terms & Conditions.",
+  "termsSection2Heading": "Orders & Payment",
+  "termsSection2Body": "All orders are subject to product availability. Prices are shown in EGP and include any applicable taxes at checkout.",
+  "termsSection3Heading": "Shipping & Returns",
+  "termsSection3Body": "Estimated delivery windows are shown at checkout. Items may be returned within 30 days of delivery in original condition.",
+  "termsSection4Heading": "Limitation of Liability",
+  "termsSection4Body": "NovaCart is not liable for indirect or consequential damages arising from the use of this app, to the maximum extent permitted by law.",
+
+  "unlockNovaCartTitle": "Unlock NovaCart",
+  "waitingForAuthMessage": "Waiting for authentication…",
+  "couldntVerifyMessage": "Couldn't verify it's you",
+  "useFaceIdMessage": "Use Face ID, Touch ID, or your device PIN to continue.",
+  "signInWithPasswordInstead": "Sign in with password instead",
+
+  "voiceSearchComingSoon": "Voice search is coming in a future update",
+  "fullNameHint": "Your full name",
+
+  "compareProductsTitle": "Compare Products",
+  "selectToCompare": "Select 2-{max} products to compare",
+  "@selectToCompare": {
+    "placeholders": {
+      "max": {"type": "int"}
+    }
+  },
+  "nothingToCompareTitle": "Nothing to compare yet",
+  "nothingToCompareMessage": "Select 2-3 products from a category to compare them side by side.",
+  "browseCategoriesLabel": "Browse Categories",
+  "priceLabel": "Price",
+  "ratingLabel": "Rating",
+  "colorsLabel": "Colors",
+  "sizesLabel": "Sizes",
+
+  "supportChatTitle": "Support Chat",
+  "typeMessageHint": "Type a message…",
+
+  "categoryWomensFashion": "Women's Fashion",
+  "categoryMensFashion": "Men's Fashion",
+  "categorySkincare": "Skincare",
+  "categoryBeauty": "Beauty",
+  "categoryHeadphones": "Headphones",
+  "categoryCameras": "Cameras",
+  "categoryLaptopsElectronics": "Laptops & Electronics",
+  "categoryBabyToys": "Baby & Toys"
+}

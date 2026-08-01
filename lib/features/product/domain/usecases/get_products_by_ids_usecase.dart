@@ -13,8 +13,6 @@ class GetProductsByIdsUseCase {
   final ProductCatalogRepository _repository;
 
   Future<Either<Failure, List<ProductEntity>>> call(Set<String> ids) async {
-    if (ids.isEmpty) return const Right([]);
-
     final result = await _repository.getAllProducts();
     return result.map(
       (products) => products.where((p) => ids.contains(p.id)).toList(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import 'quantity_selector.dart';
 
 class AddToCartBar extends StatelessWidget {
@@ -23,6 +24,7 @@ class AddToCartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.fromLTRB(
         AppSpacing.lg,
@@ -53,8 +55,8 @@ class AddToCartBar extends StatelessWidget {
             Expanded(
               child: AppButton(
                 label: isInStock
-                    ? 'Add to Cart · EGP ${totalPrice.toStringAsFixed(0)}'
-                    : 'Out of Stock',
+                    ? l10n.addToCartWithTotal(totalPrice.toStringAsFixed(0))
+                    : l10n.outOfStock,
                 icon: isInStock
                     ? const Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 18)
                     : null,

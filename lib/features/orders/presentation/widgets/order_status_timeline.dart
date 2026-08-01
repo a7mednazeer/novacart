@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../../../checkout/domain/entities/order_entity.dart';
+import '../../../checkout/presentation/utils/order_status_display.dart';
 
 /// ============================================================================
 /// DEMO SIMULATION — REPLACE WITH REAL STATUS UPDATES
@@ -36,15 +38,10 @@ class OrderStatusTimeline extends StatelessWidget {
   const OrderStatusTimeline({super.key, required this.order});
   final OrderEntity order;
 
-  static const _stages = [
-    (OrderStatus.processing, Icons.receipt_long_rounded, 'Order Processing', 'We\'ve received your order'),
-    (OrderStatus.shipped, Icons.inventory_2_rounded, 'Shipped', 'Your order has left our warehouse'),
-    (OrderStatus.outForDelivery, Icons.local_shipping_rounded, 'Out for Delivery', 'Your order is on its way'),
-    (OrderStatus.delivered, Icons.home_rounded, 'Delivered', 'Enjoy your order!'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     if (order.status == OrderStatus.cancelled) {
       return Container(
         padding: const EdgeInsets.all(AppSpacing.md),
@@ -56,21 +53,28 @@ class OrderStatusTimeline extends StatelessWidget {
           children: [
             const Icon(Icons.cancel_outlined, color: AppColors.error),
             const SizedBox(width: AppSpacing.sm),
-            Text('This order was cancelled.',
+            Text(l10n.orderCancelledMessage,
                 style: AppTextStyles.bodyMedium(color: AppColors.error)),
           ],
         ),
       );
     }
 
+    final stages = [
+      (OrderStatus.processing, Icons.receipt_long_rounded, l10n.stageProcessingTitle, l10n.stageProcessingSubtitle),
+      (OrderStatus.shipped, Icons.inventory_2_rounded, orderStatusLabel(l10n, OrderStatus.shipped), l10n.stageShippedSubtitle),
+      (OrderStatus.outForDelivery, Icons.local_shipping_rounded, orderStatusLabel(l10n, OrderStatus.outForDelivery), l10n.stageOutForDeliverySubtitle),
+      (OrderStatus.delivered, Icons.home_rounded, orderStatusLabel(l10n, OrderStatus.delivered), l10n.stageDeliveredSubtitle),
+    ];
+
     final currentStage = _simulatedStageIndex(order);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return Column(
-      children: List.generate(_stages.length, (index) {
-        final (_, icon, title, subtitle) = _stages[index];
+      children: List.generate(stages.length, (index) {
+        final (_, icon, title, subtitle) = stages[index];
         final isComplete = index <= currentStage;
-        final isLast = index == _stages.length - 1;
+        final isLast = index == stages.length - 1;
 
         return IntrinsicHeight(
           child: Row(

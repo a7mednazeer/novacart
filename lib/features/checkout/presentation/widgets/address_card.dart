@@ -3,6 +3,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../domain/entities/address_entity.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class AddressCard extends StatelessWidget {
   const AddressCard({
@@ -18,6 +19,7 @@ class AddressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return GestureDetector(
@@ -62,7 +64,7 @@ class AddressCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(AppRadius.sm),
                           ),
                           child: Text(
-                            'DEFAULT',
+                            l10n.defaultLabel,
                             style: AppTextStyles.caption(color: AppColors.primary),
                           ),
                         ),

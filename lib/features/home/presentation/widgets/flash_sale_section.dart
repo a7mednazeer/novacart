@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../product/domain/entities/product_entity.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import 'countdown_timer.dart';
 import '../../../../core/widgets/product_horizontal_list.dart';
 import 'section_header.dart';
@@ -36,7 +36,7 @@ class FlashSaleSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
-          title: '⚡ Flash Sale',
+          title: AppLocalizations.of(context).flashSaleTitle,
           trailing: earliestEnd != null
               ? CountdownTimer(endTime: earliestEnd)
               : null,

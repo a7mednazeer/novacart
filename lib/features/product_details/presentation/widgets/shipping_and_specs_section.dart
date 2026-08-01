@@ -3,6 +3,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../product/domain/entities/product_entity.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class ShippingAndSpecsSection extends StatelessWidget {
   const ShippingAndSpecsSection({super.key, required this.product});
@@ -10,6 +11,7 @@ class ShippingAndSpecsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final estimatedDelivery = DateTime.now().add(const Duration(days: 4));
     final formatted = '${_month(estimatedDelivery.month)} ${estimatedDelivery.day}';
 
@@ -18,32 +20,32 @@ class ShippingAndSpecsSection extends StatelessWidget {
       children: [
         _InfoTile(
           icon: Icons.local_shipping_outlined,
-          title: 'Estimated delivery',
-          subtitle: 'Arrives by $formatted if ordered today',
+          title: l10n.estimatedDeliveryTitle,
+          subtitle: l10n.arrivesByMessage(formatted),
         ),
         _InfoTile(
           icon: Icons.replay_rounded,
-          title: 'Free returns',
-          subtitle: '30-day return window, no questions asked',
+          title: l10n.freeReturnsTitle,
+          subtitle: l10n.freeReturnsSubtitle,
         ),
         _InfoTile(
           icon: Icons.verified_user_outlined,
-          title: 'Secure checkout',
-          subtitle: 'Cash on delivery, cards, and digital wallets accepted',
+          title: l10n.secureCheckoutTitle,
+          subtitle: l10n.secureCheckoutSubtitle,
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'Specifications',
+          l10n.specificationsTitle,
           style: AppTextStyles.h3(color: Theme.of(context).colorScheme.onSurface),
         ),
         const SizedBox(height: AppSpacing.sm),
-        _SpecRow(label: 'Brand', value: product.brand),
-        _SpecRow(label: 'Category', value: product.category),
+        _SpecRow(label: l10n.brandLabel, value: product.brand),
+        _SpecRow(label: l10n.categoryLabel, value: product.category),
         if (product.colors.isNotEmpty)
-          _SpecRow(label: 'Available Colors', value: '${product.colors.length} options'),
+          _SpecRow(label: l10n.availableColorsLabel, value: l10n.availableColorsValue(product.colors.length)),
         if (product.sizes.isNotEmpty)
-          _SpecRow(label: 'Available Sizes', value: product.sizes.join(', ')),
-        _SpecRow(label: 'Units Sold', value: '${product.soldCount}+'),
+          _SpecRow(label: l10n.availableSizesLabel, value: product.sizes.join(', ')),
+        _SpecRow(label: l10n.unitsSoldLabel, value: l10n.unitsSoldValue(product.soldCount)),
       ],
     );
   }

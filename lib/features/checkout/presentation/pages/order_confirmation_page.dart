@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:novacart/features/checkout/domain/entities/payment_method.dart';
-
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../domain/entities/order_entity.dart';
+import '../../../../generated/l10n/app_localizations.dart';
+import '../utils/payment_method_display.dart';
 
 class OrderConfirmationPage extends StatelessWidget {
   const OrderConfirmationPage({super.key, required this.order});
@@ -21,6 +21,7 @@ class OrderConfirmationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return PopScope(
@@ -51,12 +52,14 @@ class OrderConfirmationPage extends StatelessWidget {
                     .fadeIn(duration: 300.ms),
                 const SizedBox(height: AppSpacing.xl),
                 Text(
-                  'Order Placed!',
+                  l10n.orderPlacedTitle,
                   style: AppTextStyles.displaySmall(color: textPrimary),
                 ).animate().fadeIn(delay: 200.ms),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  'Your order #${order.id.isNotEmpty ? order.id.substring(0, 8).toUpperCase() : 'NOVA'} has been confirmed.',
+                  l10n.orderConfirmedMessage(
+                    order.id.isNotEmpty ? order.id.substring(0, 8).toUpperCase() : 'NOVA',
+                  ),
                   textAlign: TextAlign.center,
                   style: AppTextStyles.bodyMedium(color: AppColors.textSecondaryLight),
                 ).animate().fadeIn(delay: 300.ms),
@@ -72,21 +75,21 @@ class OrderConfirmationPage extends StatelessWidget {
                   child: Column(
                     children: [
                       _SummaryRow(
-                        label: 'Items',
+                        label: l10n.itemsLabel,
                         value: '${order.itemCount}',
                       ),
                       _SummaryRow(
-                        label: 'Payment',
-                        value: order.paymentMethod.label,
+                        label: l10n.stepPaymentLabel,
+                        value: paymentMethodLabel(l10n, order.paymentMethod),
                       ),
                       _SummaryRow(
-                        label: 'Estimated delivery',
+                        label: l10n.estimatedDeliveryTitle,
                         value:
                             '${_months[order.estimatedDelivery.month - 1]} ${order.estimatedDelivery.day}',
                       ),
                       const Divider(height: AppSpacing.lg),
                       _SummaryRow(
-                        label: 'Total Paid',
+                        label: l10n.totalPaidLabel,
                         value: 'EGP ${order.total.toStringAsFixed(0)}',
                         emphasize: true,
                       ),
@@ -95,12 +98,12 @@ class OrderConfirmationPage extends StatelessWidget {
                 ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1, end: 0),
                 const Spacer(),
                 AppButton(
-                  label: 'Continue Shopping',
+                  label: l10n.continueShoppingLabel,
                   onPressed: () => context.go(AppRoutes.home),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 AppButton(
-                  label: 'View Order',
+                  label: l10n.viewOrderLabel,
                   variant: AppButtonVariant.text,
                   onPressed: () =>
                       context.push(AppRoutes.orderTrackingPath(order.id)),

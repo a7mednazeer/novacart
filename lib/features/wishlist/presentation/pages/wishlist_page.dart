@@ -15,6 +15,7 @@ import '../../../../core/widgets/shimmer_box.dart';
 import '../../../comparison/presentation/cubit/comparison_cubit.dart';
 import '../../../product/domain/entities/product_entity.dart';
 import '../cubit/wishlist_cubit.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -50,9 +51,10 @@ class _WishlistPageState extends State<WishlistPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wishlist'),
+        title: Text(l10n.wishlistTitle),
         centerTitle: false,
         actions: [
           IconButton(
@@ -87,9 +89,9 @@ class _WishlistPageState extends State<WishlistPage> {
           if (products.isEmpty) {
             return EmptyStateView(
               icon: Icons.favorite_border_rounded,
-              title: 'Your wishlist is empty',
-              message: 'Tap the heart on any product to save it here for later.',
-              actionLabel: 'Browse Products',
+              title: l10n.wishlistEmptyTitle,
+              message: l10n.wishlistEmptyMessage,
+              actionLabel: l10n.browseProducts,
               onAction: () => context.go(AppRoutes.home),
             );
           }
@@ -111,7 +113,7 @@ class _WishlistPageState extends State<WishlistPage> {
                       const SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
-                          'Select 2-${ComparisonCubit.maxProducts} products to compare',
+                          l10n.selectToCompare(ComparisonCubit.maxProducts),
                           style: AppTextStyles.bodySmall(color: AppColors.primary),
                         ),
                       ),
@@ -120,26 +122,26 @@ class _WishlistPageState extends State<WishlistPage> {
                 ),
               Expanded(
                 child: RefreshIndicator(
-                  color: AppColors.primary,
-                  onRefresh: () => sl<WishlistCubit>().loadProducts(),
-                  child: GridView.builder(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    itemCount: products.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: AppSpacing.lg,
-                      crossAxisSpacing: AppSpacing.md,
-                      childAspectRatio: 0.62,
-                    ),
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      return LayoutBuilder(
+            color: AppColors.primary,
+            onRefresh: () => sl<WishlistCubit>().loadProducts(),
+            child: GridView.builder(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              itemCount: products.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: AppSpacing.lg,
+                crossAxisSpacing: AppSpacing.md,
+                childAspectRatio: 0.62,
+              ),
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return LayoutBuilder(
                         builder: (context, constraints) => Stack(
                           children: [
                             ProductCard(
-                              product: product,
-                              width: constraints.maxWidth,
-                              isFavorite: true,
+                    product: product,
+                    width: constraints.maxWidth,
+                    isFavorite: true,
                               onFavoriteToggle: _isCompareMode
                                   ? null
                                   : () => sl<WishlistCubit>().toggle(product.id),
@@ -215,19 +217,19 @@ class _WishlistPageState extends State<WishlistPage> {
                         top: false,
                         child: AppButton(
                           label: compareState.canCompare
-                              ? 'Compare (${compareState.products.length})'
-                              : 'Select at least 2 to compare',
+                              ? l10n.compareProductsWithCount(compareState.products.length)
+                              : l10n.selectAtLeastTwoToCompare,
                           onPressed: compareState.canCompare
                               ? () => context.push(AppRoutes.comparison)
                               : null,
                           icon: const Icon(Icons.compare_arrows_rounded,
                               size: 18, color: Colors.white),
                         ),
-                      ),
-                    );
-                  },
-                ),
-            ],
+                  ),
+                );
+              },
+            ),
+          ],
           );
         },
       ),

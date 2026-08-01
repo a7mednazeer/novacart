@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../../domain/entities/review_entity.dart';
 
 class ReviewCard extends StatelessWidget {
   const ReviewCard({super.key, required this.review});
   final ReviewEntity review;
 
-  String _timeAgo(DateTime date) {
+  String _timeAgo(AppLocalizations l10n, DateTime date) {
     final days = DateTime.now().difference(date).inDays;
-    if (days < 1) return 'Today';
-    if (days < 30) return '$days days ago';
+    if (days < 1) return l10n.todayLabel;
+    if (days < 30) return l10n.daysAgoLabel(days);
     final months = (days / 30).floor();
-    return months == 1 ? '1 month ago' : '$months months ago';
+    return l10n.monthsAgoLabel(months);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
     final initials = review.userName.isNotEmpty ? review.userName[0] : '?';
 
@@ -49,7 +51,7 @@ class ReviewCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      _timeAgo(review.date),
+                      _timeAgo(l10n, review.date),
                       style: AppTextStyles.caption(color: AppColors.textMutedLight),
                     ),
                   ],

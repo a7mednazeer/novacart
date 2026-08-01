@@ -3,6 +3,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../domain/entities/notification_entity.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class NotificationTile extends StatelessWidget {
   const NotificationTile({
@@ -28,15 +29,16 @@ class NotificationTile extends StatelessWidget {
         NotificationType.system => AppColors.primary,
       };
 
-  String _timeAgo(DateTime date) {
+  String _timeAgo(AppLocalizations l10n, DateTime date) {
     final diff = DateTime.now().difference(date);
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    return '${diff.inDays}d ago';
+    if (diff.inMinutes < 60) return l10n.minutesAgoShort(diff.inMinutes);
+    if (diff.inHours < 24) return l10n.hoursAgoShort(diff.inHours);
+    return l10n.daysAgoShort(diff.inDays);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return Dismissible(
@@ -110,7 +112,7 @@ class NotificationTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _timeAgo(notification.createdAt),
+                      _timeAgo(l10n, notification.createdAt),
                       style: AppTextStyles.caption(color: AppColors.textMutedLight),
                     ),
                   ],

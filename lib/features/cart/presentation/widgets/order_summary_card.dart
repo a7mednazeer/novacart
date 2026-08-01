@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class OrderSummaryCard extends StatelessWidget {
   const OrderSummaryCard({
@@ -28,6 +29,7 @@ class OrderSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return Container(
@@ -40,17 +42,17 @@ class OrderSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Order Summary', style: AppTextStyles.h3(color: textPrimary)),
+          Text(l10n.orderSummary, style: AppTextStyles.h3(color: textPrimary)),
           const SizedBox(height: AppSpacing.md),
-          _Row(label: 'Subtotal', value: subtotal),
+          _Row(label: l10n.subtotal, value: subtotal),
           if (discountAmount > 0)
-            _Row(label: 'Discount', value: -discountAmount, valueColor: AppColors.discount),
+            _Row(label: l10n.discountLabel, value: -discountAmount, valueColor: AppColors.discount),
           _Row(
-            label: 'Shipping',
+            label: l10n.shippingLabel,
             value: shippingFee,
             freeLabel: shippingFee == 0,
           ),
-          _Row(label: 'VAT (14%)', value: tax),
+          _Row(label: l10n.vatLabel, value: tax),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Divider(height: 1),
@@ -58,7 +60,7 @@ class OrderSummaryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Total', style: AppTextStyles.h3(color: textPrimary)),
+              Text(l10n.totalLabel, style: AppTextStyles.h3(color: textPrimary)),
               Text(
                 'EGP ${total.toStringAsFixed(0)}',
                 style: AppTextStyles.h2(color: AppColors.primary),
@@ -71,7 +73,9 @@ class OrderSummaryCard extends StatelessWidget {
               const Icon(Icons.local_shipping_outlined, size: 16, color: AppColors.textSecondaryLight),
               const SizedBox(width: 6),
               Text(
-                'Estimated delivery: ${_months[estimatedDelivery.month - 1]} ${estimatedDelivery.day}',
+                l10n.estimatedDeliveryLabel(
+                  '${_months[estimatedDelivery.month - 1]} ${estimatedDelivery.day}',
+                ),
                 style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
               ),
             ],
@@ -104,7 +108,9 @@ class _Row extends StatelessWidget {
         children: [
           Text(label, style: AppTextStyles.bodyMedium(color: AppColors.textSecondaryLight)),
           Text(
-            freeLabel ? 'Free' : '${value < 0 ? '-' : ''}EGP ${value.abs().toStringAsFixed(0)}',
+            freeLabel
+                ? AppLocalizations.of(context).freeLabel
+                : '${value < 0 ? '-' : ''}EGP ${value.abs().toStringAsFixed(0)}',
             style: AppTextStyles.bodyMedium(
               color: valueColor ?? Theme.of(context).colorScheme.onSurface,
             ).copyWith(fontWeight: FontWeight.w600),

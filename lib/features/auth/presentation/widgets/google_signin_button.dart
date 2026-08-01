@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import 'package:novacart/generated/l10n/app_localizations.dart';
 
 /// A Google sign-in button. The multi-color "G" is drawn from stacked
 /// [CustomPaint] arcs rather than requiring a bundled SVG, so the auth
@@ -43,7 +43,7 @@ class GoogleSignInButton extends StatelessWidget {
                   const _GoogleMark(size: 20),
                   const SizedBox(width: AppSpacing.sm),
                   Text(
-                    'Continue with Google',
+                    AppLocalizations.of(context).continueWithGoogle,
                     style: AppTextStyles.buttonMedium(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),

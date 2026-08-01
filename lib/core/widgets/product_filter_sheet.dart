@@ -3,6 +3,7 @@ import '../../features/product/domain/entities/product_filter.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_dimens.dart';
 import '../constants/app_text_styles.dart';
+import '../../generated/l10n/app_localizations.dart';
 import 'app_button.dart';
 
 /// Opens as a modal bottom sheet from both the Categories product
@@ -31,6 +32,16 @@ Future<ProductFilter?> showProductFilterSheet(
   );
 }
 
+String _sortOptionLabel(AppLocalizations l10n, ProductSortOption option) {
+  return switch (option) {
+    ProductSortOption.relevance => l10n.sortRelevance,
+    ProductSortOption.priceLowToHigh => l10n.sortPriceLowToHigh,
+    ProductSortOption.priceHighToLow => l10n.sortPriceHighToLow,
+    ProductSortOption.ratingHighToLow => l10n.sortRatingHighToLow,
+    ProductSortOption.newest => l10n.sortNewest,
+  };
+}
+
 class _FilterSheetContent extends StatefulWidget {
   const _FilterSheetContent({
     required this.current,
@@ -57,6 +68,7 @@ class _FilterSheetContentState extends State<_FilterSheetContent> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return SafeArea(
@@ -85,7 +97,7 @@ class _FilterSheetContentState extends State<_FilterSheetContent> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Filter & Sort', style: AppTextStyles.h1(color: textPrimary)),
+                  Text(l10n.filterAndSort, style: AppTextStyles.h1(color: textPrimary)),
                   TextButton(
                     onPressed: () => setState(() {
                       _priceRange = RangeValues(0, widget.catalogMaxPrice);
@@ -93,13 +105,13 @@ class _FilterSheetContentState extends State<_FilterSheetContent> {
                       _brands = {};
                       _sortBy = ProductSortOption.relevance;
                     }),
-                    child: const Text('Reset'),
+                    child: Text(l10n.resetLabel),
                   ),
                 ],
               ),
               const SizedBox(height: AppSpacing.lg),
 
-              Text('Sort By', style: AppTextStyles.h3(color: textPrimary)),
+              Text(l10n.sortByLabel, style: AppTextStyles.h3(color: textPrimary)),
               const SizedBox(height: AppSpacing.sm),
               Wrap(
                 spacing: 8,
@@ -107,7 +119,7 @@ class _FilterSheetContentState extends State<_FilterSheetContent> {
                 children: ProductSortOption.values.map((option) {
                   final selected = _sortBy == option;
                   return ChoiceChip(
-                    label: Text(option.label),
+                    label: Text(_sortOptionLabel(l10n, option)),
                     selected: selected,
                     onSelected: (_) => setState(() => _sortBy = option),
                     selectedColor: AppColors.primary.withValues(alpha: 0.15),
@@ -122,7 +134,7 @@ class _FilterSheetContentState extends State<_FilterSheetContent> {
               ),
 
               const SizedBox(height: AppSpacing.xl),
-              Text('Price Range', style: AppTextStyles.h3(color: textPrimary)),
+              Text(l10n.priceRangeLabel, style: AppTextStyles.h3(color: textPrimary)),
               RangeSlider(
                 values: _priceRange,
                 min: 0,
@@ -137,14 +149,14 @@ class _FilterSheetContentState extends State<_FilterSheetContent> {
               ),
 
               const SizedBox(height: AppSpacing.md),
-              Text('Minimum Rating', style: AppTextStyles.h3(color: textPrimary)),
+              Text(l10n.minimumRatingLabel, style: AppTextStyles.h3(color: textPrimary)),
               const SizedBox(height: AppSpacing.sm),
               Wrap(
                 spacing: 8,
                 children: [0, 3, 3.5, 4, 4.5].map((rating) {
                   final selected = _minRating == rating;
                   return ChoiceChip(
-                    label: Text(rating == 0 ? 'Any' : '$rating★'),
+                    label: Text(rating == 0 ? l10n.anyLabel : '$rating★'),
                     selected: selected,
                     onSelected: (_) => setState(() => _minRating = rating.toDouble()),
                     selectedColor: AppColors.primary.withValues(alpha: 0.15),
@@ -160,7 +172,7 @@ class _FilterSheetContentState extends State<_FilterSheetContent> {
 
               if (widget.availableBrands.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.xl),
-                Text('Brand', style: AppTextStyles.h3(color: textPrimary)),
+                Text(l10n.brandLabel, style: AppTextStyles.h3(color: textPrimary)),
                 const SizedBox(height: AppSpacing.sm),
                 Wrap(
                   spacing: 8,
@@ -187,7 +199,7 @@ class _FilterSheetContentState extends State<_FilterSheetContent> {
 
               const SizedBox(height: AppSpacing.xl),
               AppButton(
-                label: 'Apply Filters',
+                label: l10n.applyFiltersLabel,
                 onPressed: () => Navigator.of(context).pop(
                   ProductFilter(
                     minPrice: _priceRange.start > 0 ? _priceRange.start : null,

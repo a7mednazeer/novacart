@@ -10,6 +10,7 @@ import 'core/services/push_notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/language_cubit.dart';
 import 'core/theme/theme_cubit.dart';
+import 'generated/l10n/app_localizations.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
 import 'features/comparison/presentation/cubit/comparison_cubit.dart';
 import 'features/notifications/presentation/cubit/notifications_cubit.dart';
@@ -82,8 +83,9 @@ class NovaCartApp extends StatelessWidget {
                 darkTheme: AppTheme.dark,
                 themeMode: themeMode,
                 locale: locale,
-                supportedLocales: const [Locale('en'), Locale('ar')],
+                supportedLocales: AppLocalizations.supportedLocales,
                 localizationsDelegates: const [
+                  AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
                   GlobalCupertinoLocalizations.delegate,

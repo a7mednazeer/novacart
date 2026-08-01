@@ -9,6 +9,7 @@ import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../widgets/onboarding_slide.dart';
 import '../widgets/onboarding_slide_data.dart';
@@ -42,8 +43,9 @@ class _OnboardingView extends StatefulWidget {
 class _OnboardingViewState extends State<_OnboardingView> {
   final PageController _controller = PageController();
   int _currentPage = 0;
+  int _totalSlides = 3;
 
-  bool get _isLastPage => _currentPage == onboardingSlides.length - 1;
+  bool get _isLastPage => _currentPage == _totalSlides - 1;
 
   @override
   void dispose() {
@@ -66,6 +68,10 @@ class _OnboardingViewState extends State<_OnboardingView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final slides = buildOnboardingSlides(context);
+    _totalSlides = slides.length;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -80,7 +86,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                 child: TextButton(
                   onPressed: _isLastPage ? null : _skip,
                   child: Text(
-                    'Skip',
+                    l10n.skip,
                     style: AppTextStyles.buttonMedium(
                       color: _isLastPage
                           ? Colors.transparent
@@ -93,17 +99,17 @@ class _OnboardingViewState extends State<_OnboardingView> {
             Expanded(
               child: PageView.builder(
                 controller: _controller,
-                itemCount: onboardingSlides.length,
+                itemCount: slides.length,
                 onPageChanged: (index) => setState(() => _currentPage = index),
                 itemBuilder: (context, index) => OnboardingSlide(
-                  data: onboardingSlides[index],
+                  data: slides[index],
                   isActive: index == _currentPage,
                 ),
               ),
             ),
             SmoothPageIndicator(
               controller: _controller,
-              count: onboardingSlides.length,
+              count: slides.length,
               effect: const ExpandingDotsEffect(
                 activeDotColor: AppColors.primary,
                 dotColor: AppColors.borderLight,
@@ -116,7 +122,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
             Padding(
               padding: const EdgeInsets.all(AppSpacing.xl),
               child: AppButton(
-                label: _isLastPage ? 'Get Started' : 'Next',
+                label: _isLastPage ? l10n.onboardingGetStarted : l10n.next,
                 onPressed: _next,
                 icon: _isLastPage
                     ? null

@@ -3,6 +3,8 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../domain/entities/payment_method.dart';
+import '../../../../generated/l10n/app_localizations.dart';
+import '../utils/payment_method_display.dart';
 
 class PaymentMethodTile extends StatelessWidget {
   const PaymentMethodTile({
@@ -18,6 +20,7 @@ class PaymentMethodTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return GestureDetector(
@@ -50,12 +53,12 @@ class PaymentMethodTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    method.label,
+                    paymentMethodLabel(l10n, method),
                     style: AppTextStyles.bodyMedium(color: textPrimary)
                         .copyWith(fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    method.subtitle,
+                    paymentMethodSubtitle(l10n, method),
                     style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
                   ),
                 ],

@@ -9,6 +9,7 @@ import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../data/feedback_service.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class AboutFeedbackPage extends StatefulWidget {
   const AboutFeedbackPage({super.key});
@@ -50,10 +51,10 @@ class _AboutFeedbackPageState extends State<AboutFeedbackPage> {
       await sl<FeedbackService>().submit(message);
       if (!mounted) return;
       _feedbackController.clear();
-      AppSnackBar.showSuccess(context, 'Thanks for your feedback!');
+      AppSnackBar.showSuccess(context, AppLocalizations.of(context).feedbackThanksMessage);
     } catch (e) {
       if (!mounted) return;
-      AppSnackBar.showError(context, 'Could not submit feedback. Please try again.');
+      AppSnackBar.showError(context, AppLocalizations.of(context).feedbackErrorMessage);
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -61,10 +62,11 @@ class _AboutFeedbackPageState extends State<AboutFeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('About & Feedback')),
+      appBar: AppBar(title: Text(l10n.aboutFeedbackTitle)),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.xl),
         children: [
@@ -72,15 +74,15 @@ class _AboutFeedbackPageState extends State<AboutFeedbackPage> {
           const SizedBox(height: AppSpacing.sm),
           Center(
             child: Text(
-              _version.isEmpty ? 'Loading version…' : 'Version $_version',
+              _version.isEmpty ? l10n.loadingVersionLabel : l10n.versionLabel(_version),
               style: AppTextStyles.bodySmall(color: AppColors.textMutedLight),
             ),
           ),
           const SizedBox(height: AppSpacing.xxl),
-          Text('Send us feedback', style: AppTextStyles.h3(color: textPrimary)),
+          Text(l10n.sendUsFeedbackTitle, style: AppTextStyles.h3(color: textPrimary)),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'Found a bug or have an idea to make NovaCart better? We read every message.',
+            l10n.feedbackIntroMessage,
             style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -88,14 +90,14 @@ class _AboutFeedbackPageState extends State<AboutFeedbackPage> {
             controller: _feedbackController,
             maxLines: 5,
             style: AppTextStyles.bodyMedium(color: textPrimary),
-            decoration: const InputDecoration(
-              hintText: 'Tell us what you think…',
+            decoration: InputDecoration(
+              hintText: l10n.feedbackHintText,
               alignLabelWithHint: true,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
           AppButton(
-            label: 'Submit Feedback',
+            label: l10n.submitFeedbackLabel,
             isLoading: _isSubmitting,
             onPressed: _submitFeedback,
           ),

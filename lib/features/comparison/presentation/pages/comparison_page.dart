@@ -13,15 +13,17 @@ import '../../../../core/widgets/empty_state_view.dart';
 import '../../../../core/widgets/shimmer_box.dart';
 import '../cubit/comparison_cubit.dart';
 import '../widgets/comparison_row.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class ComparisonPage extends StatelessWidget {
   const ComparisonPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Compare Products'),
+        title: Text(l10n.compareProductsTitle),
         actions: [
           BlocBuilder<ComparisonCubit, ComparisonState>(
             bloc: sl<ComparisonCubit>(),
@@ -29,7 +31,7 @@ class ComparisonPage extends StatelessWidget {
               if (state.products.isEmpty) return const SizedBox.shrink();
               return TextButton(
                 onPressed: () => sl<ComparisonCubit>().clear(),
-                child: const Text('Clear All'),
+                child: Text(l10n.clearAll),
               );
             },
           ),
@@ -43,9 +45,9 @@ class ComparisonPage extends StatelessWidget {
           if (products.isEmpty) {
             return EmptyStateView(
               icon: Icons.compare_arrows_rounded,
-              title: 'Nothing to compare yet',
-              message: 'Select 2-3 products from a category to compare them side by side.',
-              actionLabel: 'Browse Categories',
+              title: l10n.nothingToCompareTitle,
+              message: l10n.nothingToCompareMessage,
+              actionLabel: l10n.browseCategoriesLabel,
               onAction: () => context.go(AppRoutes.categories),
             );
           }
@@ -121,13 +123,13 @@ class ComparisonPage extends StatelessWidget {
                     ],
                   ),
                   buildComparisonRow<String>(
-                    label: 'Brand',
+                    label: l10n.brandLabel,
                     values: products.map((p) => p.brand).toList(),
                     cellBuilder: (v) => Text(v, style: AppTextStyles.bodySmall(color: textPrimary)),
                     shaded: true,
                   ),
                   buildComparisonRow<double>(
-                    label: 'Price',
+                    label: l10n.priceLabel,
                     values: products.map((p) => p.discountedPrice).toList(),
                     cellBuilder: (v) => Text(
                       'EGP ${v.toStringAsFixed(0)}',
@@ -136,7 +138,7 @@ class ComparisonPage extends StatelessWidget {
                     ),
                   ),
                   buildComparisonRow<double>(
-                    label: 'Rating',
+                    label: l10n.ratingLabel,
                     values: products.map((p) => p.rating).toList(),
                     cellBuilder: (v) => Row(
                       mainAxisSize: MainAxisSize.min,
@@ -149,18 +151,18 @@ class ComparisonPage extends StatelessWidget {
                     shaded: true,
                   ),
                   buildComparisonRow<int>(
-                    label: 'Units Sold',
+                    label: l10n.unitsSoldLabel,
                     values: products.map((p) => p.soldCount).toList(),
                     cellBuilder: (v) => Text('$v+', style: AppTextStyles.bodySmall(color: textPrimary)),
                   ),
                   buildComparisonRow<String>(
-                    label: 'Category',
+                    label: l10n.categoryLabel,
                     values: products.map((p) => p.category).toList(),
                     cellBuilder: (v) => Text(v, style: AppTextStyles.bodySmall(color: textPrimary)),
                     shaded: true,
                   ),
                   buildComparisonRow<List<String>>(
-                    label: 'Colors',
+                    label: l10n.colorsLabel,
                     values: products.map((p) => p.colors).toList(),
                     cellBuilder: (colors) => colors.isEmpty
                         ? Text('—', style: AppTextStyles.bodySmall(color: AppColors.textMutedLight))
@@ -180,7 +182,7 @@ class ComparisonPage extends StatelessWidget {
                           ),
                   ),
                   buildComparisonRow<List<String>>(
-                    label: 'Sizes',
+                    label: l10n.sizesLabel,
                     values: products.map((p) => p.sizes).toList(),
                     cellBuilder: (sizes) => Text(
                       sizes.isEmpty ? '—' : sizes.join(', '),

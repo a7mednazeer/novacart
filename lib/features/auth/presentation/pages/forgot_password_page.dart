@@ -10,6 +10,7 @@ import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../cubit/auth_cubit.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
@@ -51,8 +52,9 @@ class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Forgot Password')),
+      appBar: AppBar(title: Text(l10n.resetPasswordTitle)),
       body: BlocConsumer<AuthCubit, AuthActionState>(
         listener: (context, state) {
           if (state is AuthActionMessage) {
@@ -89,7 +91,7 @@ class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Text(
-                    _linkSent ? 'Check your email' : 'Reset your password',
+                    _linkSent ? l10n.checkYourEmail : l10n.resetPasswordTitle,
                     style: AppTextStyles.displaySmall(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -97,8 +99,8 @@ class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
                   const SizedBox(height: AppSpacing.xxs),
                   Text(
                     _linkSent
-                        ? 'We sent a password reset link to ${_emailController.text.trim()}. Follow the instructions in the email to set a new password.'
-                        : "Enter the email associated with your account and we'll send you a link to reset your password.",
+                        ? l10n.resetLinkSentMessage(_emailController.text.trim())
+                        : l10n.resetPasswordSubtitle,
                     style: AppTextStyles.bodyMedium(
                       color: AppColors.textSecondaryLight,
                     ),
@@ -108,8 +110,8 @@ class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
                     Form(
                       key: _formKey,
                       child: AppTextField(
-                        label: 'Email',
-                        hint: 'you@example.com',
+                        label: l10n.emailLabel,
+                        hint: l10n.emailHint,
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         prefixIcon: Icons.email_outlined,
@@ -119,18 +121,18 @@ class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     AppButton(
-                      label: 'Send Reset Link',
+                      label: l10n.sendResetLink,
                       isLoading: isLoading,
                       onPressed: () => _submit(context),
                     ),
                   ] else ...[
                     AppButton(
-                      label: 'Back to Sign In',
+                      label: l10n.backToSignIn,
                       onPressed: () => context.pop(),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     AppButton(
-                      label: 'Resend Link',
+                      label: l10n.resendLink,
                       variant: AppButtonVariant.text,
                       isLoading: isLoading,
                       onPressed: () => _submit(context),

@@ -12,6 +12,7 @@ import '../../../../core/widgets/shimmer_box.dart';
 import '../cubit/cart_cubit.dart';
 import '../widgets/cart_item_card.dart';
 import '../widgets/coupon_input.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../widgets/order_summary_card.dart';
 
 class CartPage extends StatefulWidget {
@@ -30,8 +31,9 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Cart')),
+      appBar: AppBar(title: Text(l10n.cartTitle)),
       body: BlocBuilder<CartCubit, CartState>(
         bloc: sl<CartCubit>(),
         builder: (context, state) {
@@ -51,9 +53,9 @@ class _CartPageState extends State<CartPage> {
           if (state.isEmpty && state.savedForLater.isEmpty) {
             return EmptyStateView(
               icon: Icons.shopping_cart_outlined,
-              title: 'Your cart is empty',
-              message: 'Add products to your cart to see them here.',
-              actionLabel: 'Start Shopping',
+              title: l10n.yourCartIsEmpty,
+              message: l10n.addProductsMessage,
+              actionLabel: l10n.startShopping,
               onAction: () => context.go(AppRoutes.home),
             );
           }
@@ -68,7 +70,7 @@ class _CartPageState extends State<CartPage> {
                   children: [
                     if (state.items.isNotEmpty) ...[
                       Text(
-                        '${state.itemCount} item${state.itemCount == 1 ? '' : 's'}',
+                        l10n.itemCount(state.itemCount),
                         style: AppTextStyles.bodyMedium(
                           color: AppColors.textSecondaryLight,
                         ),
@@ -84,15 +86,15 @@ class _CartPageState extends State<CartPage> {
                         ),
                       ),
                     ] else
-                      const EmptyStateView(
+                      EmptyStateView(
                         icon: Icons.shopping_cart_outlined,
-                        title: 'Cart is empty',
-                        message: 'Move items back from Saved for Later, or keep shopping.',
+                        title: l10n.cartIsEmptyShort,
+                        message: l10n.moveItemsBackMessage,
                       ),
                     if (state.savedForLater.isNotEmpty) ...[
                       const SizedBox(height: AppSpacing.lg),
                       Text(
-                        'Saved for Later (${state.savedForLater.length})',
+                        l10n.savedForLaterCount(state.savedForLater.length),
                         style: AppTextStyles.h3(
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
@@ -168,7 +170,8 @@ class _CheckoutBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Checkout · EGP ${total.toStringAsFixed(0)}'),
+              Text(AppLocalizations.of(context)
+                  .checkoutWithTotal(total.toStringAsFixed(0))),
               const SizedBox(width: 8),
               const Icon(Icons.arrow_forward_rounded, size: 18),
             ],

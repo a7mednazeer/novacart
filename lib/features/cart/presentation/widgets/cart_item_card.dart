@@ -5,6 +5,7 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/utils/color_utils.dart';
 import '../../../../core/widgets/shimmer_box.dart';
+import 'package:novacart/generated/l10n/app_localizations.dart';
 import '../cubit/cart_line_item.dart';
 
 class CartItemCard extends StatelessWidget {
@@ -29,6 +30,7 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
     final product = line.product;
 
@@ -125,7 +127,7 @@ class CartItemCard extends StatelessWidget {
                         minimumSize: const Size(0, 0),
                       ),
                       child: Text(
-                        isSavedForLater ? 'Move to Cart' : 'Save for Later',
+                        isSavedForLater ? l10n.moveToCart : l10n.saveForLater,
                         style: AppTextStyles.bodySmall(color: AppColors.primary),
                       ),
                     ),

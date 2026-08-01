@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class SectionHeader extends StatelessWidget {
   const SectionHeader({
@@ -34,7 +35,7 @@ class SectionHeader extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'View all',
+                    AppLocalizations.of(context).viewAll,
                     style: AppTextStyles.bodySmall(color: AppColors.primary)
                         .copyWith(fontWeight: FontWeight.w600),
                   ),

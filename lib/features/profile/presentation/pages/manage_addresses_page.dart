@@ -10,6 +10,7 @@ import '../../../../core/widgets/shimmer_box.dart';
 import '../../../checkout/presentation/cubit/address_management_cubit.dart';
 import '../../../checkout/presentation/widgets/add_address_sheet.dart';
 import '../../../checkout/presentation/widgets/address_card.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class ManageAddressesPage extends StatelessWidget {
   const ManageAddressesPage({super.key});
@@ -28,8 +29,9 @@ class _ManageAddressesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Saved Addresses')),
+      appBar: AppBar(title: Text(l10n.savedAddressesLabel)),
       body: BlocBuilder<AddressManagementCubit, AddressManagementState>(
         builder: (context, state) {
           final cubit = context.read<AddressManagementCubit>();
@@ -62,8 +64,8 @@ class _ManageAddressesView extends StatelessWidget {
                 child: addresses.isEmpty
                     ? EmptyStateView(
                         icon: Icons.location_on_outlined,
-                        title: 'No saved addresses',
-                        message: 'Add a shipping address to speed up checkout next time.',
+                        title: l10n.noSavedAddressesTitle,
+                        message: l10n.noSavedAddressesMessage,
                       )
                     : ListView(
                         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -110,7 +112,7 @@ class _ManageAddressesView extends StatelessWidget {
                     ),
                   ),
                   icon: const Icon(Icons.add_rounded, size: 18),
-                  label: const Text('Add New Address'),
+                  label: Text(l10n.addNewAddress),
                   style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
                 ),
               ),

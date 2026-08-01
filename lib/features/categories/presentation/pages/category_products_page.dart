@@ -17,6 +17,7 @@ import '../../../../core/widgets/shimmer_box.dart';
 import '../../../comparison/presentation/cubit/comparison_cubit.dart';
 import '../../../product/domain/entities/product_entity.dart';
 import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../cubit/category_products_cubit.dart';
 
 class CategoryProductsPage extends StatelessWidget {
@@ -75,6 +76,7 @@ class _CategoryProductsViewState extends State<_CategoryProductsView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -84,7 +86,7 @@ class _CategoryProductsViewState extends State<_CategoryProductsView> {
               Icons.compare_arrows_rounded,
               color: _isCompareMode ? AppColors.primary : null,
             ),
-            tooltip: 'Compare products',
+            tooltip: l10n.compareProductsTooltip,
             onPressed: _toggleCompareMode,
           ),
         ],
@@ -119,7 +121,7 @@ class _CategoryProductsViewState extends State<_CategoryProductsView> {
                       const SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
-                          'Select 2-${ComparisonCubit.maxProducts} products to compare',
+                          l10n.selectToCompare(ComparisonCubit.maxProducts),
                           style: AppTextStyles.bodySmall(color: AppColors.primary),
                         ),
                       ),
@@ -135,7 +137,7 @@ class _CategoryProductsViewState extends State<_CategoryProductsView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${loaded.filteredProducts.length} products',
+                      l10n.productsCountLabel(loaded.filteredProducts.length),
                       style: AppTextStyles.bodyMedium(
                         color: AppColors.textSecondaryLight,
                       ),
@@ -155,8 +157,8 @@ class _CategoryProductsViewState extends State<_CategoryProductsView> {
                       icon: const Icon(Icons.tune_rounded, size: 18),
                       label: Text(
                         loaded.filter.isActive
-                            ? 'Filters (${loaded.filter.activeCount})'
-                            : 'Filter & Sort',
+                            ? l10n.filtersCount(loaded.filter.activeCount)
+                            : l10n.filterAndSort,
                       ),
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(0, 38),
@@ -170,9 +172,9 @@ class _CategoryProductsViewState extends State<_CategoryProductsView> {
                 child: loaded.filteredProducts.isEmpty
                     ? EmptyStateView(
                         icon: Icons.search_off_rounded,
-                        title: 'No products found',
-                        message: 'Try adjusting your filters to see more results.',
-                        actionLabel: loaded.filter.isActive ? 'Clear Filters' : null,
+                        title: l10n.noProductsFoundTitle,
+                        message: l10n.tryAdjustingFiltersMessage,
+                        actionLabel: loaded.filter.isActive ? l10n.clearFiltersLabel : null,
                         onAction: loaded.filter.isActive
                             ? () => context.read<CategoryProductsCubit>().clearFilter()
                             : null,
@@ -270,8 +272,8 @@ class _CategoryProductsViewState extends State<_CategoryProductsView> {
                         top: false,
                         child: AppButton(
                           label: compareState.canCompare
-                              ? 'Compare (${compareState.products.length})'
-                              : 'Select at least 2 to compare',
+                              ? l10n.compareProductsWithCount(compareState.products.length)
+                              : l10n.selectAtLeastTwoToCompare,
                           onPressed: compareState.canCompare
                               ? () => context.push(AppRoutes.comparison)
                               : null,

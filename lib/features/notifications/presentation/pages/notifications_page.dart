@@ -10,6 +10,7 @@ import '../../../../core/widgets/shimmer_box.dart';
 import '../../domain/entities/notification_entity.dart';
 import '../cubit/notifications_cubit.dart';
 import '../widgets/notification_tile.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -34,9 +35,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: Text(l10n.notificationsTitle),
         actions: [
           BlocBuilder<NotificationsCubit, NotificationsState>(
             bloc: sl<NotificationsCubit>(),
@@ -44,7 +46,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               if (state.unreadCount == 0) return const SizedBox.shrink();
               return TextButton(
                 onPressed: () => sl<NotificationsCubit>().markAllAsRead(),
-                child: const Text('Mark all read'),
+                child: Text(l10n.markAllReadLabel),
               );
             },
           ),
@@ -67,10 +69,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
           }
 
           if (state.notifications.isEmpty) {
-            return const EmptyStateView(
+            return EmptyStateView(
               icon: Icons.notifications_none_rounded,
-              title: 'No notifications yet',
-              message: 'Order updates and promotions will show up here.',
+              title: l10n.noNotificationsYetTitle,
+              message: l10n.noNotificationsYetMessage,
             );
           }
 

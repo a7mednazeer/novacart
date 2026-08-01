@@ -2,50 +2,33 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
-import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../support/presentation/pages/support_chat_page.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class HelpCenterPage extends StatelessWidget {
   const HelpCenterPage({super.key});
 
-  static const _faqs = [
-    (
-      'How do I track my order?',
-      'Go to Profile → Order History, tap any order to see its live status timeline.',
-    ),
-    (
-      'What payment methods are accepted?',
-      'Cash on Delivery, Credit/Debit Card, Apple Pay, and Google Pay.',
-    ),
-    (
-      'How do I return an item?',
-      'Items are eligible for return within 30 days of delivery. Contact support '
-          'from this screen to start a return.',
-    ),
-    (
-      'How long does delivery take?',
-      'Most orders arrive within 3-5 business days. You\'ll see an estimated '
-          'delivery date at checkout and in your order tracking.',
-    ),
-    (
-      'How do I apply a coupon code?',
-      'Enter it in the Cart screen just above the order summary, then tap Apply.',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
+    final faqs = [
+      (l10n.faqQ1, l10n.faqA1),
+      (l10n.faqQ2, l10n.faqA2),
+      (l10n.faqQ3, l10n.faqA3),
+      (l10n.faqQ4, l10n.faqA4),
+      (l10n.faqQ5, l10n.faqA5),
+    ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Help Center')),
+      appBar: AppBar(title: Text(l10n.helpCenterLabel)),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
-          Text('Frequently Asked Questions', style: AppTextStyles.h3(color: textPrimary)),
+          Text(l10n.helpCenterFaqTitle, style: AppTextStyles.h3(color: textPrimary)),
           const SizedBox(height: AppSpacing.sm),
-          ..._faqs.map((faq) {
+          ...faqs.map((faq) {
             final (question, answer) = faq;
             return Container(
               margin: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -79,10 +62,10 @@ class HelpCenterPage extends StatelessWidget {
             );
           }),
           const SizedBox(height: AppSpacing.lg),
-          Text('Still need help?', style: AppTextStyles.h3(color: textPrimary)),
+          Text(l10n.stillNeedHelpTitle, style: AppTextStyles.h3(color: textPrimary)),
           const SizedBox(height: AppSpacing.sm),
           AppButton(
-            label: 'Contact Support',
+            label: l10n.contactSupportLabel,
             variant: AppButtonVariant.outlined,
             icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18, color: AppColors.primary),
             onPressed: () => Navigator.of(context).push(

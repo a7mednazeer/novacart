@@ -14,6 +14,7 @@ import '../../../../core/widgets/product_card.dart';
 import '../../../../core/widgets/product_filter_sheet.dart';
 import '../../../../core/widgets/shimmer_box.dart';
 import '../../../wishlist/presentation/cubit/wishlist_cubit.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../cubit/search_cubit.dart';
 
 class SearchPage extends StatelessWidget {
@@ -91,8 +92,8 @@ class _SearchViewState extends State<_SearchView> {
                   style: AppTextStyles.bodyMedium(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  decoration: const InputDecoration(
-                    hintText: 'Search products, brands…',
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context).searchFieldHint,
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
@@ -111,7 +112,7 @@ class _SearchViewState extends State<_SearchView> {
               GestureDetector(
                 onTap: () => AppSnackBar.showInfo(
                   context,
-                  'Voice search is coming in a future update',
+                  AppLocalizations.of(context).voiceSearchComingSoon,
                 ),
                 child: const Icon(Icons.mic_none_rounded,
                     size: 20, color: AppColors.textMutedLight),
@@ -153,6 +154,7 @@ class _IdleView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return ListView(
@@ -162,10 +164,10 @@ class _IdleView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Recent Searches', style: AppTextStyles.h3(color: textPrimary)),
+              Text(l10n.recentSearchesTitle, style: AppTextStyles.h3(color: textPrimary)),
               TextButton(
                 onPressed: () => context.read<SearchCubit>().clearRecentSearches(),
-                child: const Text('Clear All'),
+                child: Text(l10n.clearAll),
               ),
             ],
           ),
@@ -184,7 +186,7 @@ class _IdleView extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
         ],
-        Text('Trending Searches', style: AppTextStyles.h3(color: textPrimary)),
+        Text(l10n.trendingSearchesTitle, style: AppTextStyles.h3(color: textPrimary)),
         const SizedBox(height: AppSpacing.sm),
         Wrap(
           spacing: 8,
@@ -209,6 +211,7 @@ class _ResultsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         Padding(
@@ -221,7 +224,7 @@ class _ResultsView extends StatelessWidget {
             children: [
               Flexible(
                 child: Text(
-                  '${state.filteredResults.length} results for "${state.query}"',
+                  l10n.searchResultsFor(state.filteredResults.length, state.query),
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.bodyMedium(color: AppColors.textSecondaryLight),
                 ),
@@ -241,8 +244,8 @@ class _ResultsView extends StatelessWidget {
                   },
                   icon: const Icon(Icons.tune_rounded, size: 16),
                   label: Text(state.filter.isActive
-                      ? 'Filters (${state.filter.activeCount})'
-                      : 'Filter'),
+                      ? l10n.filtersCount(state.filter.activeCount)
+                      : l10n.filterAndSort),
                   style: OutlinedButton.styleFrom(minimumSize: const Size(0, 34)),
                 ),
             ],
@@ -252,10 +255,10 @@ class _ResultsView extends StatelessWidget {
           child: state.filteredResults.isEmpty
               ? EmptyStateView(
                   icon: Icons.search_off_rounded,
-                  title: 'No results found',
+                  title: l10n.noResultsFound,
                   message: state.allResults.isEmpty
-                      ? 'We couldn\'t find anything for "${state.query}". Try a different keyword.'
-                      : 'No products match your filters. Try adjusting them.',
+                      ? l10n.noResultsForQuery(state.query)
+                      : l10n.noProductsMatchFiltersMessage,
                 )
               : GridView.builder(
                   padding: const EdgeInsets.fromLTRB(

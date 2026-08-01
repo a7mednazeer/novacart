@@ -6,6 +6,7 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/widgets/cart_icon_button.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../../../product/data/datasources/category_mock_data.dart';
 import '../../../product/data/datasources/subcategory_mock_data.dart';
 import '../../../product/domain/entities/subcategory_entity.dart';
@@ -46,7 +47,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 const Icon(Icons.search_rounded, size: 20, color: AppColors.textMutedLight),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
-                  'What do you search for?',
+                  AppLocalizations.of(context).searchHint,
                   style: AppTextStyles.bodyMedium(color: AppColors.textMutedLight),
                 ),
               ],

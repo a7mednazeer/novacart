@@ -8,6 +8,7 @@ import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/error_state_view.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../cubit/edit_profile_cubit.dart';
 
 class EditProfilePage extends StatelessWidget {
@@ -44,12 +45,13 @@ class _EditProfileViewState extends State<_EditProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
+      appBar: AppBar(title: Text(l10n.editProfileTitle)),
       body: BlocConsumer<EditProfileCubit, EditProfileState>(
         listener: (context, state) {
           if (state is EditProfileSaved) {
-            AppSnackBar.showSuccess(context, 'Profile updated');
+            AppSnackBar.showSuccess(context, l10n.profileUpdatedMessage);
             Navigator.of(context).pop();
           } else if (state is EditProfileError) {
             AppSnackBar.showError(context, state.message);
@@ -83,14 +85,14 @@ class _EditProfileViewState extends State<_EditProfileView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppTextField(
-                    label: 'Full Name',
+                    label: l10n.fullNameLabel,
                     controller: _nameController,
                     prefixIcon: Icons.person_outline_rounded,
                     validator: Validators.fullName,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
-                    label: 'Phone Number',
+                    label: l10n.phoneNumberLabel,
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                     prefixIcon: Icons.phone_outlined,
@@ -98,7 +100,7 @@ class _EditProfileViewState extends State<_EditProfileView> {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   AppButton(
-                    label: 'Save Changes',
+                    label: l10n.saveChangesLabel,
                     isLoading: isSaving,
                     onPressed: () {
                       if (!_formKey.currentState!.validate()) return;

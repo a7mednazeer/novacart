@@ -4,15 +4,16 @@ import '../services/local_storage_service.dart';
 
 /// Manages the app's [Locale] and persists the choice.
 ///
-/// NOTE — scope of what this actually does today: switching to Arabic
-/// correctly flips layout direction (RTL) app-wide via the
-/// `Directionality` wrapper in `main.dart`, and `flutter_localizations`'
-/// delegates handle locale-aware date/number formatting. It does **not**
-/// yet translate NovaCart's own UI strings — that requires adding ARB
-/// files under a `core/l10n/` directory and running `flutter gen-l10n`,
-/// then replacing hardcoded `Text('...')` calls with
-/// `AppLocalizations.of(context)!.xyz`. This cubit and the RTL
-/// plumbing are the integration point that work is built on top of.
+/// Real string translation now exists via `flutter gen-l10n` (see
+/// `lib/l10n/app_en.arb` / `app_ar.arb` and `AppLocalizations`) for
+/// Splash, Onboarding, Auth, bottom navigation, and Home's headers —
+/// switching to Arabic both flips layout to RTL (via the
+/// `Directionality` wrapper in `main.dart`) *and* shows real Arabic
+/// text on those screens. Screens built in earlier steps that haven't
+/// been converted to `AppLocalizations.of(context)!.xyz` yet still show
+/// their original hardcoded English strings — extending coverage is a
+/// matter of adding more keys to both ARB files and swapping the
+/// `Text('...')` calls, following the same pattern.
 class LanguageCubit extends Cubit<Locale> {
   LanguageCubit(this._storage) : super(_initial(_storage));
 

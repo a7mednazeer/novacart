@@ -4,6 +4,7 @@ import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 /// Returns `true` if an address was successfully added, via [onSubmit].
 Future<void> showAddAddressSheet(
@@ -74,6 +75,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: EdgeInsets.only(
         left: AppSpacing.lg,
@@ -88,12 +90,12 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Add New Address',
+                l10n.addNewAddress,
                 style: AppTextStyles.h2(color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(height: AppSpacing.lg),
               AppTextField(
-                label: 'Full Name',
+                label: l10n.fullNameLabel,
                 controller: _nameController,
                 prefixIcon: Icons.person_outline_rounded,
                 validator: Validators.fullName,
@@ -101,7 +103,7 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
               ),
               const SizedBox(height: AppSpacing.md),
               AppTextField(
-                label: 'Phone Number',
+                label: l10n.phoneNumberLabel,
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
                 prefixIcon: Icons.phone_outlined,
@@ -110,24 +112,24 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
               ),
               const SizedBox(height: AppSpacing.md),
               AppTextField(
-                label: 'Address',
-                hint: 'Street, building, apartment number',
+                label: l10n.stepAddressLabel,
+                hint: l10n.addressHintLabel,
                 controller: _addressController,
                 prefixIcon: Icons.home_outlined,
-                validator: (v) => Validators.required(v, field: 'Address'),
+                validator: (v) => Validators.required(v, field: l10n.stepAddressLabel),
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: AppSpacing.md),
               AppTextField(
-                label: 'City',
+                label: l10n.cityLabel,
                 controller: _cityController,
                 prefixIcon: Icons.location_city_outlined,
-                validator: (v) => Validators.required(v, field: 'City'),
+                validator: (v) => Validators.required(v, field: l10n.cityLabel),
                 textInputAction: TextInputAction.done,
               ),
               const SizedBox(height: AppSpacing.xl),
               AppButton(
-                label: 'Save Address',
+                label: l10n.saveAddressLabel,
                 isLoading: _isSubmitting,
                 onPressed: _submit,
               ),

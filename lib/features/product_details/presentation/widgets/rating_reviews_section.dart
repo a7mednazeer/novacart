@@ -4,6 +4,7 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../product/domain/entities/product_entity.dart';
 import '../../domain/entities/review_entity.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import 'review_card.dart';
 
 class RatingReviewsSection extends StatelessWidget {
@@ -20,12 +21,13 @@ class RatingReviewsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textPrimary = Theme.of(context).colorScheme.onSurface;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Ratings & Reviews', style: AppTextStyles.h2(color: textPrimary)),
+        Text(l10n.ratingsAndReviewsTitle, style: AppTextStyles.h2(color: textPrimary)),
         const SizedBox(height: AppSpacing.md),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +51,7 @@ class RatingReviewsSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${product.reviewCount} reviews',
+                  l10n.reviewsCountLabel(product.reviewCount),
                   style: AppTextStyles.caption(color: AppColors.textMutedLight),
                 ),
               ],
@@ -94,7 +96,7 @@ class RatingReviewsSection extends StatelessWidget {
                 isScrollControlled: true,
                 builder: (context) => _AllReviewsSheet(reviews: reviews),
               ),
-              child: Text('View all ${reviews.length} reviews'),
+              child: Text(l10n.viewAllReviewsLabel(reviews.length)),
             ),
           ),
       ],
@@ -120,7 +122,7 @@ class _AllReviewsSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'All Reviews (${reviews.length})',
+                AppLocalizations.of(context).allReviewsTitle(reviews.length),
                 style: AppTextStyles.h2(color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(height: AppSpacing.md),

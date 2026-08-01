@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 /// Content for one onboarding slide. Using simple Material icons inside
 /// a decorated container (rather than requiring illustration assets
@@ -17,26 +18,28 @@ class OnboardingSlideData {
   final String description;
 }
 
-const List<OnboardingSlideData> onboardingSlides = [
-  OnboardingSlideData(
-    icon: Icons.storefront_rounded,
-    title: 'Shop Everything,\nAll in One Place',
-    description:
-        'Explore thousands of curated products across fashion, tech, home '
-        'and more — all from one seamless app.',
-  ),
-  OnboardingSlideData(
-    icon: Icons.local_shipping_rounded,
-    title: 'Fast, Trackable\nDelivery',
-    description:
-        'Get real-time order tracking and reliable delivery estimates, '
-        'right from checkout to your doorstep.',
-  ),
-  OnboardingSlideData(
-    icon: Icons.verified_user_rounded,
-    title: 'Secure & Trusted\nCheckout',
-    description:
-        'Pay your way with bank-grade security — cards, wallets, or cash '
-        'on delivery, your choice, every time.',
-  ),
-];
+/// A function rather than a top-level `const` list because the titles
+/// and descriptions are now localized (`AppLocalizations` needs a
+/// `BuildContext`) — called once from `OnboardingPage.build()`.
+List<OnboardingSlideData> buildOnboardingSlides(BuildContext context) {
+  final l10n = AppLocalizations.of(context);
+
+  return [
+    OnboardingSlideData(
+      icon: Icons.storefront_rounded,
+      title: l10n.onboarding1Title,
+      description: l10n.onboarding1Desc,
+    ),
+    OnboardingSlideData(
+      icon: Icons.local_shipping_rounded,
+      title: l10n.onboarding2Title,
+      description: l10n.onboarding2Desc,
+    ),
+    OnboardingSlideData(
+      icon: Icons.verified_user_rounded,
+      title: l10n.onboarding3Title,
+      description: l10n.onboarding3Desc,
+    ),
+  ];
+}
+

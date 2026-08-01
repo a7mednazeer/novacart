@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.novacart"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

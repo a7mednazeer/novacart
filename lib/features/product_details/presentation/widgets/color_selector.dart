@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 import '../../../../core/utils/color_utils.dart';
 
 class ColorSelector extends StatelessWidget {
@@ -24,7 +25,7 @@ class ColorSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Color',
+          AppLocalizations.of(context).colorLabel,
           style: AppTextStyles.h3(color: Theme.of(context).colorScheme.onSurface),
         ),
         const SizedBox(height: AppSpacing.sm),

@@ -10,6 +10,7 @@ import '../../../../core/utils/app_snackbar.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import 'package:novacart/generated/l10n/app_localizations.dart';
 import '../cubit/auth_cubit.dart';
 import '../widgets/auth_divider.dart';
 import '../widgets/google_signin_button.dart';
@@ -71,8 +72,9 @@ class _SignUpViewState extends State<_SignUpView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Account')),
+      appBar: AppBar(title: Text(l10n.createAccount)),
       body: BlocConsumer<AuthCubit, AuthActionState>(
         listener: (context, state) {
           if (state is AuthActionMessage) {
@@ -94,22 +96,22 @@ class _SignUpViewState extends State<_SignUpView> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Join NovaCart',
+                      l10n.joinNovaCart,
                       style: AppTextStyles.displaySmall(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
-                      'Create an account to start shopping smarter',
+                      l10n.signUpSubtitle,
                       style: AppTextStyles.bodyMedium(
                         color: AppColors.textSecondaryLight,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xxl),
                     AppTextField(
-                      label: 'Full Name',
-                      hint: 'Your full name',
+                      label: l10n.fullNameLabel,
+                      hint: l10n.fullNameHint,
                       controller: _nameController,
                       prefixIcon: Icons.person_outline_rounded,
                       textInputAction: TextInputAction.next,
@@ -118,8 +120,8 @@ class _SignUpViewState extends State<_SignUpView> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'Email',
-                      hint: 'you@example.com',
+                      label: l10n.emailLabel,
+                      hint: l10n.emailHint,
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       prefixIcon: Icons.email_outlined,
@@ -129,7 +131,7 @@ class _SignUpViewState extends State<_SignUpView> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'Password',
+                      label: l10n.passwordLabel,
                       hint: 'At least 8 characters',
                       controller: _passwordController,
                       obscureText: true,
@@ -140,7 +142,7 @@ class _SignUpViewState extends State<_SignUpView> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'Confirm Password',
+                      label: l10n.confirmPasswordLabel,
                       hint: 'Re-enter your password',
                       controller: _confirmController,
                       obscureText: true,
@@ -167,7 +169,7 @@ class _SignUpViewState extends State<_SignUpView> {
                         const SizedBox(width: AppSpacing.xs),
                         Expanded(
                           child: Text(
-                            'I agree to the Terms & Conditions and Privacy Policy',
+                            l10n.agreeTerms,
                             style: AppTextStyles.bodySmall(
                               color: AppColors.textSecondaryLight,
                             ),
@@ -177,7 +179,7 @@ class _SignUpViewState extends State<_SignUpView> {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     AppButton(
-                      label: 'Create Account',
+                      label: l10n.createAccount,
                       isLoading: isLoading,
                       onPressed: () => _submit(context),
                     ),

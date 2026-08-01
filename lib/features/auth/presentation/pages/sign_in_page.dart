@@ -12,6 +12,7 @@ import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import 'package:novacart/generated/l10n/app_localizations.dart';
 import '../cubit/auth_cubit.dart';
 import '../widgets/auth_divider.dart';
 import '../widgets/google_signin_button.dart';
@@ -61,6 +62,7 @@ class _SignInViewState extends State<_SignInView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: BlocConsumer<AuthCubit, AuthActionState>(
         listener: (context, state) {
@@ -85,22 +87,22 @@ class _SignInViewState extends State<_SignInView> {
                     const AppLogo(size: 64, markOnLight: true),
                     const SizedBox(height: AppSpacing.xxl),
                     Text(
-                      'Welcome back',
+                      l10n.welcomeBack,
                       style: AppTextStyles.displaySmall(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
-                      'Sign in to continue shopping with NovaCart',
+                      l10n.signInSubtitle,
                       style: AppTextStyles.bodyMedium(
                         color: AppColors.textSecondaryLight,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xxl),
                     AppTextField(
-                      label: 'Email',
-                      hint: 'you@example.com',
+                      label: l10n.emailLabel,
+                      hint: l10n.emailHint,
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
@@ -110,13 +112,13 @@ class _SignInViewState extends State<_SignInView> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'Password',
-                      hint: 'Enter your password',
+                      label: l10n.passwordLabel,
+                      hint: l10n.passwordHint,
                       controller: _passwordController,
                       obscureText: true,
                       textInputAction: TextInputAction.done,
                       prefixIcon: Icons.lock_outline_rounded,
-                      validator: (v) => Validators.required(v, field: 'Password'),
+                      validator: (v) => Validators.required(v, field: l10n.passwordLabel),
                       autofillHints: const [AutofillHints.password],
                     ),
                     const SizedBox(height: AppSpacing.sm),
@@ -137,7 +139,7 @@ class _SignInViewState extends State<_SignInView> {
                             ),
                             const SizedBox(width: AppSpacing.xs),
                             Text(
-                              'Remember me',
+                              l10n.rememberMe,
                               style: AppTextStyles.bodySmall(
                                 color: AppColors.textSecondaryLight,
                               ),
@@ -148,13 +150,13 @@ class _SignInViewState extends State<_SignInView> {
                           onPressed: isLoading
                               ? null
                               : () => context.push(AppRoutes.forgotPassword),
-                          child: const Text('Forgot password?'),
+                          child: Text(l10n.forgotPassword),
                         ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.md),
                     AppButton(
-                      label: 'Sign In',
+                      label: l10n.signIn,
                       isLoading: isLoading,
                       onPressed: () => _submit(context),
                     ),
@@ -171,7 +173,7 @@ class _SignInViewState extends State<_SignInView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don't have an account? ",
+                          l10n.noAccount,
                           style: AppTextStyles.bodyMedium(
                             color: AppColors.textSecondaryLight,
                           ),
@@ -181,7 +183,7 @@ class _SignInViewState extends State<_SignInView> {
                               ? null
                               : () => context.push(AppRoutes.signUp),
                           child: Text(
-                            'Create Account',
+                            l10n.createAccount,
                             style: AppTextStyles.bodyMedium(
                               color: AppColors.primary,
                             ).copyWith(fontWeight: FontWeight.w600),

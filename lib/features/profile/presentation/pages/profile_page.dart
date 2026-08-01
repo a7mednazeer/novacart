@@ -17,6 +17,7 @@ import 'edit_profile_page.dart';
 import 'help_center_page.dart';
 import 'language_settings_page.dart';
 import 'static_content_page.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 /// The main Profile tab: account card (tap to edit), appearance/language
 /// settings, order & address management, support/legal, and sign out.
@@ -25,6 +26,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return BlocProvider(
       create: (_) => sl<AuthCubit>(),
       child: BlocListener<AuthCubit, AuthActionState>(
@@ -34,7 +36,7 @@ class ProfilePage extends StatelessWidget {
           }
         },
         child: Scaffold(
-          appBar: AppBar(title: const Text('Profile')),
+          appBar: AppBar(title: Text(l10n.profileTitle)),
           body: ListView(
             padding: const EdgeInsets.all(AppSpacing.xl),
             children: [
@@ -62,14 +64,14 @@ class ProfilePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Your NovaCart Account',
+                              l10n.yourNovaCartAccount,
                               style: AppTextStyles.h3(
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'Tap to edit your name & phone number',
+                              l10n.tapToEditProfileMessage,
                               style: AppTextStyles.bodySmall(
                                 color: AppColors.textSecondaryLight,
                               ),
@@ -90,7 +92,7 @@ class ProfilePage extends StatelessWidget {
                     contentPadding: EdgeInsets.zero,
                     activeThumbColor: AppColors.primary,
                     title: Text(
-                      'Dark Mode',
+                      l10n.darkModeLabel,
                       style: AppTextStyles.bodyLarge(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -103,7 +105,7 @@ class ProfilePage extends StatelessWidget {
               ),
               _MenuTile(
                 icon: Icons.language_rounded,
-                label: 'Language',
+                label: l10n.languageLabel,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const LanguageSettingsPage()),
                 ),
@@ -112,54 +114,54 @@ class ProfilePage extends StatelessWidget {
               const Divider(height: AppSpacing.xxl),
               _MenuTile(
                 icon: Icons.receipt_long_outlined,
-                label: 'Order History',
+                label: l10n.orderHistoryTitle,
                 onTap: () => context.push(AppRoutes.orders),
               ),
               _MenuTile(
                 icon: Icons.location_on_outlined,
-                label: 'Saved Addresses',
+                label: l10n.savedAddressesLabel,
                 onTap: () => context.push(AppRoutes.manageAddresses),
               ),
               _MenuTile(
                 icon: Icons.payment_outlined,
-                label: 'Payment Methods',
-                onTap: () => _showComingSoon(context, 'Payment Methods'),
+                label: l10n.paymentMethodsLabel,
+                onTap: () => _showComingSoon(context, l10n.paymentMethodsLabel),
               ),
               const Divider(height: AppSpacing.xxl),
               _MenuTile(
                 icon: Icons.help_outline_rounded,
-                label: 'Help Center',
+                label: l10n.helpCenterLabel,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const HelpCenterPage()),
                 ),
               ),
               _MenuTile(
                 icon: Icons.privacy_tip_outlined,
-                label: 'Privacy Policy',
+                label: l10n.privacyPolicyLabel,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const StaticContentPage(
-                      title: 'Privacy Policy',
-                      sections: privacyPolicySections,
+                    builder: (_) => StaticContentPage(
+                      title: l10n.privacyPolicyLabel,
+                      sections: buildPrivacyPolicySections(l10n),
                     ),
                   ),
                 ),
               ),
               _MenuTile(
                 icon: Icons.description_outlined,
-                label: 'Terms & Conditions',
+                label: l10n.termsConditionsLabel,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const StaticContentPage(
-                      title: 'Terms & Conditions',
-                      sections: termsAndConditionsSections,
+                    builder: (_) => StaticContentPage(
+                      title: l10n.termsConditionsLabel,
+                      sections: buildTermsAndConditionsSections(l10n),
                     ),
                   ),
                 ),
               ),
               _MenuTile(
                 icon: Icons.info_outline_rounded,
-                label: 'About & Feedback',
+                label: l10n.aboutFeedbackTitle,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const AboutFeedbackPage()),
                 ),
@@ -168,7 +170,7 @@ class ProfilePage extends StatelessWidget {
               BlocBuilder<AuthCubit, AuthActionState>(
                 builder: (context, state) {
                   return AppButton(
-                    label: 'Sign Out',
+                    label: l10n.signOutLabel,
                     variant: AppButtonVariant.outlined,
                     isLoading: state is AuthActionLoading,
                     icon: const Icon(Icons.logout_rounded, size: 18, color: AppColors.primary),
@@ -185,7 +187,7 @@ class ProfilePage extends StatelessWidget {
 
   void _showComingSoon(BuildContext context, String feature) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$feature — coming soon')),
+      SnackBar(content: Text(AppLocalizations.of(context).comingSoonSuffix(feature))),
     );
   }
 }
@@ -248,7 +250,7 @@ class _BiometricLoginToggleState extends State<_BiometricLoginToggle> {
   Future<void> _onToggle(bool value) async {
     if (value) {
       final confirmed = await sl<BiometricAuthService>().authenticate(
-        reason: 'Confirm to enable biometric login',
+        reason: AppLocalizations.of(context).biometricConfirmReason,
       );
       if (!confirmed) return;
     }
@@ -261,15 +263,16 @@ class _BiometricLoginToggleState extends State<_BiometricLoginToggle> {
   Widget build(BuildContext context) {
     if (_isChecking || !_isSupported) return const SizedBox.shrink();
 
+    final l10n = AppLocalizations.of(context);
     return SwitchListTile(
       contentPadding: EdgeInsets.zero,
       activeThumbColor: AppColors.primary,
       title: Text(
-        'Biometric Login',
+        l10n.biometricLoginLabel,
         style: AppTextStyles.bodyLarge(color: Theme.of(context).colorScheme.onSurface),
       ),
       subtitle: Text(
-        'Require Face ID / Touch ID to open the app',
+        l10n.biometricLoginSubtitle,
         style: AppTextStyles.bodySmall(color: AppColors.textSecondaryLight),
       ),
       secondary: const Icon(Icons.fingerprint_rounded),

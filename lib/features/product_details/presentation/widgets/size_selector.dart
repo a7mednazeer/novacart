@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class SizeSelector extends StatelessWidget {
   const SizeSelector({
@@ -23,7 +24,7 @@ class SizeSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Size',
+          AppLocalizations.of(context).sizeLabel,
           style: AppTextStyles.h3(color: Theme.of(context).colorScheme.onSurface),
         ),
         const SizedBox(height: AppSpacing.sm),

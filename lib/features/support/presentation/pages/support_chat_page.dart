@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class _ChatMessage {
   const _ChatMessage({required this.text, required this.isFromUser});
@@ -93,8 +94,9 @@ class _SupportChatPageState extends State<SupportChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Support Chat')),
+      appBar: AppBar(title: Text(l10n.supportChatTitle)),
       body: Column(
         children: [
           Expanded(
@@ -133,7 +135,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
                       controller: _controller,
                       textInputAction: TextInputAction.send,
                       onSubmitted: (_) => _send(),
-                      decoration: const InputDecoration(hintText: 'Type a message…'),
+                      decoration: InputDecoration(hintText: l10n.typeMessageHint),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),

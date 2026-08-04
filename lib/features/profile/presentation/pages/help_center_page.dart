@@ -50,7 +50,7 @@ class HelpCenterPage extends StatelessWidget {
                   ),
                   children: [
                     Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: Text(
                         answer,
                         style: AppTextStyles.bodyMedium(color: AppColors.textSecondaryLight),

@@ -2,8 +2,57 @@
 
 A premium, production-grade Flutter e-commerce app.
 
-## Status: Step 17 of N — Localization Complete: Notifications, Profile, Full-App Audit ✅
-(Steps 1–16 — Foundation/Splash, Onboarding/Auth, Home/Nav Shell, Categories/Search, Product Details, Wishlist/Cart, Checkout, Order History/Tracking, Notifications/Profile, Recently Viewed/Biometric Login, Comparison/Support Chat, Localization Infrastructure, Extended Localization ×4 — are complete; summaries retained below.)
+## ✅ Project Status: Complete
+
+Built across 18 steps in one continuous session: Splash/Onboarding,
+Firebase Auth, a full bottom-nav shell (Home, Categories, Wishlist,
+Profile), Search, Product Details, Wishlist + Cart (real-time
+Firestore sync), Checkout (address/payment/review) + Order
+Confirmation, Order History + Tracking, Push Notifications + an
+in-app Notification Center, a fully-featured Profile (edit info,
+language, biometric login toggle, saved addresses, help center, legal
+pages, feedback), Recently Viewed, Product Comparison, a Support Chat
+placeholder, and full English/Arabic localization (285 ARB keys, RTL
+layout support) verified with a whole-app audit rather than assumed
+complete. mor than 215 Dart files, Clean Architecture (`domain`/`data`/
+`presentation` per feature), Bloc/Cubit throughout, GetIt for DI,
+GoRouter for navigation.
+
+**What's included that a real deployment still needs** (all
+intentionally left as manual steps, not gaps in the code):
+- A real Firebase project — run `flutterfire configure` to generate
+  `firebase_options.dart` (see `main.dart`'s comment for the one-line
+  swap once it exists).
+- `firestore.rules` (included, ready to deploy — see below) and
+  seeding the `products`/`banners` collections with real catalog data
+  (the app runs today on labeled mock data as a fallback).
+- App icon and splash image assets (`AppAssets` + `flutter_launcher_icons`/
+  `flutter_native_splash` configs are wired up in `pubspec.yaml`; drop
+  in the actual PNGs and run both packages).
+- Full ARB string coverage exists for Auth/Home/Wishlist/Cart/
+  Categories/Search/Product Details/Checkout/Orders/Notifications/
+  Profile; a couple of deliberately-scoped exceptions (language picker
+  names, Support Chat's demo bot dialogue) are documented inline where
+  they occur.
+
+### Deploying the included Firestore rules
+```bash
+firebase login
+firebase use --add          # link this folder to your Firebase project
+firebase deploy --only firestore:rules
+```
+`firestore.rules` enforces that every user can only read/write their
+own `users/{uid}/...` data (wishlist, cart, addresses, orders,
+notifications, recentlyViewed all covered by one ownership rule),
+`products`/`banners` are public read-only, and `feedback` is
+write-only from the client (nobody, including the submitter, can read
+it back through the app — it's meant to be reviewed from the Firebase
+Console).
+
+## Full build history
+The step-by-step log below is kept as real documentation of *why*
+things are structured the way they are — each step explains an
+architectural decision, not just "what got added."
 
 ## Architecture
 
@@ -773,19 +822,38 @@ steps. Parity re-verified after every batch; 285/285 confirmed at the end.
    - Dutch (Nederlands)
    - Korean (한국어)
 
-## Next step (awaiting your confirmation)
+## Step 18 — Final Completion Pass: RTL Fix + Firestore Security Rules (this delivery)
 
-**Localization is now genuinely complete across the entire app** —
-every screen, every reusable widget, every snackbar message, all 285
-keys with full English/Arabic parity, verified with a project-wide
-audit rather than just the screens originally planned. This was a
-real, substantial piece of work across 17 steps; from here, natural
-directions are a **general polish pass** (more pull-to-refresh/offline
-states, empty-state illustrations, richer shared-element transitions,
-tablet/responsive layout checks — note `Align(Alignment.centerLeft)`
-in a couple of spots like Help Center's FAQ answers doesn't auto-mirror
-for RTL the way `AlignmentDirectional` would, which would be a good
-first polish item), or **hardening for real deployment** (Firestore
-security rules review, app icons/splash assets, `flutter_launcher_icons`
-run, a first real TestFlight/Play Console build). Let me know which
-direction you'd like to take next.
+1. **Fixed the one concrete RTL bug flagged at the end of Step 17**:
+   Help Center's FAQ answer text used `Align(Alignment.centerLeft)`,
+   which doesn't mirror for Arabic; changed to
+   `AlignmentDirectional.centerStart`, which does. The other
+   `Alignment.centerLeft` usages found in the same audit (gradient
+   directions on image overlays in the banner carousel and category
+   grid, and chat-bubble side in Support Chat) were deliberately left
+   alone — those are visual/compositional choices, not text-direction
+   bugs, and "should a chat bubble's side flip in RTL" is a product
+   decision, not a correctness fix.
+2. **`firestore.rules`, `firebase.json`, `firestore.indexes.json`
+   actually written** — mentioned as a to-do in nearly every earlier
+   step's Firestore setup notes, delivered for real here: one ownership
+   rule covers every per-user subcollection (wishlist, cart, addresses,
+   orders, notifications, recentlyViewed) instead of repeating the same
+   check nine times; `products`/`banners` are public read-only;
+   `feedback` is write-only and unreadable even by its own submitter
+   through the app (by design — it's meant for Console review).
+   Deploy instructions included directly in this README.
+3. **Final whole-project verification**: no `TODO`/`FIXME`/`HACK`
+   markers anywhere in `lib/`, 285/285 ARB keys still matched between
+   English and Arabic, 215 Dart files, all confirmed via direct
+   inspection rather than assumed.
+
+This closes out the build. The app is feature-complete against the
+original spec, with every simplification, mock-data fallback, and
+deliberately-scoped exception documented at the point it occurs rather
+than glossed over. What would remain from here is genuinely external
+to the codebase: creating the actual Firebase project, running
+`flutterfire configure`, sourcing real app icon/splash artwork, seeding
+a real product catalog, and going through app store review — none of
+which are code-writing tasks. If you'd like, I'm glad to keep going on
+any specific piece of that, or on further in-app polish.
